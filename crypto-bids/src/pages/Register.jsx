@@ -1,12 +1,12 @@
-import React, { useState } from "react";
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
+import React, { useState } from "react"
+import Button from "react-bootstrap/Button"
+import Form from "react-bootstrap/Form"
 
 function Register() {
-	const [username, setUsername] = useState("");
-	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
-	const [confirmation, setConfirmation] = useState("");
+	const [username, setUsername] = useState("")
+	const [email, setEmail] = useState("")
+	const [password, setPassword] = useState("")
+	const [confirmation, setConfirmation] = useState("")
 
 	/*function registerUser(e) {
         e.preventDefault()
@@ -27,11 +27,11 @@ function Register() {
 				password,
 				confirmation,
 			}),
-		});
+		})
 
-		const data = await response.json();
+		const data = await response.json()
 
-		console.log(data);
+		console.log(data)
 	}
 
 	return (
@@ -92,7 +92,7 @@ function Register() {
 				</Button>
 			</Form>
 		</div>
-	);
+	)
 }
 
 export default Register
