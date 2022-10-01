@@ -57,7 +57,7 @@ function Register() {
 						value={email}
 						onChange={(e) => setEmail(e.target.value)}
 						placeholder="Enter Email"
-						pattern="/[\w\.?\W?]+@[\w]+\.\w+/gm"
+						pattern="/[\w\.?\W?]+\@[\w]+\.\w+/"
 						required
 					/>
 				</Form.Group>
@@ -69,7 +69,7 @@ function Register() {
 						value={password}
 						onChange={(e) => setPassword(e.target.value)}
 						placeholder="Create Password"
-						pattern="/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,15}/gm"
+						//pattern="/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,15}/"
 						required
 					/>
 					<Form.Text className="text-muted">

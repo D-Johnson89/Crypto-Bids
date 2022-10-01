@@ -1,16 +1,10 @@
-// MERN = Mongo + Express + React + Node
-
-// Development = Node.js server + React server
-
-//MEN
-
-// E - Express
-
-const express = require("express")
+const express = require('express')
+//const dotenv = require('dotenv').config()
+const port = process.env.PORT || 5000
 const app = express()
-const cors = require("cors")
-const mongoose = require("mongoose")
-const bcrypt = require("bcryptjs")
+const cors = require('cors')
+const mongoose = require('mongoose')
+const bcrypt = require('bcryptjs')
 const User = require('./models/user.model')
 
 app.use(cors())
@@ -37,7 +31,6 @@ app.post(
 app.post(
 	"/api/login",
 	/*middleware function goes here*/ async (req, res) => {
-		console.log(req.body);
 		const user = await User.findOne({
 			email: req.body.email,
 			password: req.body.password,
@@ -51,6 +44,6 @@ app.post(
 	}
 )
 
-app.listen(1337, () => {
-	console.log("Server started on 1337")
+app.listen(port, () => {
+	console.log(`Server started on port ${port}`)
 })
