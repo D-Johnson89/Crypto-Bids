@@ -6,11 +6,16 @@ const cors = require('cors')
 const mongoose = require('mongoose')
 const bcrypt = require('bcryptjs')
 const User = require('./models/user.model')
+const jwt = require('jsonwebtoken')
 
 app.use(cors())
 app.use(express.json())
 
-mongoose.connect("mongodb://localhost:27017/")
+mongoose.connect("mongodb://djohnson3009:Fy6bCReTINpXOKjc@localhost:27017/users")
+
+app.get('/hello', (req, res) => {
+	res.send('hello world')
+})
 
 app.post(
 	"/api/register", async (req, res) => {
@@ -20,20 +25,21 @@ app.post(
 				username: req.body.username,
 				email: req.body.email,
 				hash: bcrypt.hashSync(req.body.password, 10),
-			});
+			})
 			res.json({ status: "ok" })
-		} catch (err) {}
-
-		res.json({ status: "error", error: "Duplicate email" })
+		} catch (err) {
+			console.log(err)
+			res.json({ status: "error", error: "Duplicate email" })
+		}
 	}
 )
 
 app.post(
-	"/api/login",
-	/*middleware function goes here*/ async (req, res) => {
+	"/api/login", async (req, res) => {
+		console.log(req.body)
 		const user = await User.findOne({
 			email: req.body.email,
-			password: req.body.password,
+			password: req.body.password
 		})
 
 		if(user) {

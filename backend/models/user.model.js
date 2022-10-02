@@ -8,14 +8,14 @@ const User = new mongoose.Schema(
 		fiatBal: { type: Number, required: true, default: 0 },
 		tetherBal: { type: Number, required: true, default: 0 },
 		bids: {
-			bType: { type: String, required: true },
-			amount: { type: Number, required: true },
-			win: { type: Boolean, required: true },
-			crypto: { type: String, required: true },
+			bType: { type: String },
+			amount: { type: Number },
+			win: { type: Boolean },
+			crypto: { type: String },
 		},
 		transacions: {
-			tType: { type: String, required: true },
-			amount: { type: Number, required: true },
+			tType: { type: String },
+			amount: { type: Number },
 		},
 	},
 	{ collection: "user-data" }
