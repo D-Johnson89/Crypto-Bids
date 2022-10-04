@@ -1,22 +1,21 @@
-import React, { useState } from "react"
-import Button from "react-bootstrap/Button"
-import Form from "react-bootstrap/Form"
+import React, { useState } from 'react'
+import { useHistory } from 'react-router-dom'
+import Button from 'react-bootstrap/Button'
+import Form from 'react-bootstrap/Form'
+import { port } from '../../../backend/index'
 
 function Register() {
-	const [username, setUsername] = useState("")
-	const [email, setEmail] = useState("")
-	const [password, setPassword] = useState("")
-	const [confirmation, setConfirmation] = useState("")
+	const history = useHistory()
 
-	/*function registerUser(e) {
-        e.preventDefault()
-        console.log({ username, password })
-    }*/
+	const [username, setUsername] = useState('')
+	const [email, setEmail] = useState('')
+	const [password, setPassword] = useState('')
+	const [confirmation, setConfirmation] = useState('')
 
 	async function registerUser(e) {
 		e.preventDefault()
 
-		const response = await fetch("http://localhost:5000/api/register", {
+		const response = await fetch(`http://localhost:${port}/api/register`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -29,9 +28,24 @@ function Register() {
 			}),
 		})
 
+		if(password !== confirmation) {
+			alert('Confirmation must match password')
+		}
+
 		const data = await response.json()
 
-		console.log(data)
+		if (data.status === 'ok') {
+			const token = jwt.sign(
+				{
+					userId: user._id,
+					username: user.username,
+					email: user.email,
+				}, secret
+			)
+
+			localStorage.setItem(token)
+			history.push('/dashboard')
+		}
 	}
 
 	return (

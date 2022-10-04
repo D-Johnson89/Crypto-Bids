@@ -1,15 +1,11 @@
-import React from "react"
-import { Link } from "react-router-dom"
+import React from 'react'
+import { Routes, Route } from 'react-router-dom'
+import NavOptions from '../components/NavOptions'
 
-export default function Home() {
-	return (
-		<ul>
-			<li>
-				<Link to="/register" >Register</Link>
-			</li>
-			<li>
-				<Link to="/login">Login</Link>
-			</li>
-		</ul>
-	)
+function Home() {
+  return (
+    <NavOptions />
+  )
 }
+
+export default Home

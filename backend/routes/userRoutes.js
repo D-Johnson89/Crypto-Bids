@@ -1,19 +1,16 @@
 const express = require('express')
 const router = express.Router()
+const { getUser, setUser, updateUser, deleteUser } = require('../controllers/userController')
 
-router.post(
-	'/', async (req, res) => {
-		res.status(200).json({ message: "register successful" })
-		/*try {
-			const user = await User.create({
-				username: req.body.username,
-				email: req.body.email,
-				hash: bcrypt.hashSync(req.body.password, 10)
-			})
-		} catch (err) {}
+router.route('/').get(getUser).post('setUser')
+router.router('/:id').put(updateUser).delete(deleteUser)
 
-		res.json({ status: "error", error: "Duplicate email" })*/
-	}
-)
+/*router.get('/', getUser)
+
+router.post("/", setUser)
+
+router.put('/:id', updateUser)
+
+router.delete('/:id', deleteUser)*/
 
 module.exports = router
