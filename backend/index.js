@@ -70,7 +70,7 @@ app.post(
 )
 
 app.get(
-	"/api/dashboard", async (req, res) => {
+	"/api/navoptions", async (req, res) => {
 
 		const token = req.headers['x-acces-token']
 
@@ -87,8 +87,8 @@ app.get(
 	}
 )
 
-/*app.post(
-	"/api/dashboard", async (req, res) => {
+app.post(
+	"/api/navoptions", async (req, res) => {
 
 		const token = req.headers['x-acces-token']
 
@@ -106,7 +106,7 @@ app.get(
 			res.json({ status: 'error', error: 'invalid token '})
 		}
 	}
-)*/
+)
 
 app.listen(port, () => {
 	console.log(`Server started on port ${port}`)

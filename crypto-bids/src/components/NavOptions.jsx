@@ -1,17 +1,16 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Routes, Route } from 'react-router-dom'
-import { useHistory } from 'react-router-dom'
-import { port } from '../../../backend/index'
 import LogOptions from './LogOptions'
 import Dashboard from './Dashboard'
 
+
+
 // Function to check if Logged In, Determines Nav Option to use
 function NavOptions() {
-    const history = useHistory()
 	const [username, setUsername] = useState('')
 		
 	async function populateQuote() {
-		const req = await fetch(`http://localhost:${port}/api/home`, {
+		const req = await fetch('http://localhost:5000/api/home', {
 			headers: {
 				'x-acces-token': localStorage.getItem('token'),
 			},
@@ -32,15 +31,18 @@ function NavOptions() {
 			const user = jwt.decode(token)
 			if(!user) {
 				localStorage.removeItem('token')
-				//history.replace('/login')
-				return <LogOptions />
 			} else {
 				populateQuote()
-				return <Dashboard />
 			}
 		}
 		
 	}, [])
+	console.log(username)
+	if(!username){
+		return <LogOptions />
+	}
+	return <Dashboard />
+	
 }
 
 export default NavOptions

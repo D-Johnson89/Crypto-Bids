@@ -1,11 +1,10 @@
 import React, { useState } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
-import { port } from '../../../backend/index'
 
 function Register() {
-	const history = useHistory()
+	const navigate = useNavigate()
 
 	const [username, setUsername] = useState('')
 	const [email, setEmail] = useState('')
@@ -15,7 +14,7 @@ function Register() {
 	async function registerUser(e) {
 		e.preventDefault()
 
-		const response = await fetch(`http://localhost:${port}/api/register`, {
+		const response = await fetch('http://localhost:5000/api/register', {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -44,13 +43,13 @@ function Register() {
 			)
 
 			localStorage.setItem(token)
-			history.push('/dashboard')
+			navigate.push('/dashboard')
 		}
 	}
 
 	return (
 		<div className="mx-auto">
-			<h1>Register for a Crypto-Bids Account</h1>
+			<h1>Register for a <Link to="/">Crypto-Bids</Link> Account</h1>
 			<Form onSubmit={registerUser}>
 				<Form.Group className="mb-3" controlId="formGroupUsername">
 					<Form.Label>Choose a Username</Form.Label>

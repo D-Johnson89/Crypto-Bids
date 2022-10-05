@@ -4,7 +4,10 @@ import NavOptions from '../components/NavOptions'
 
 function Home() {
   return (
-    <NavOptions />
+    <div>
+      <NavOptions />
+      <h1>Crypto-Bids</h1>
+    </div>
   )
 }
 

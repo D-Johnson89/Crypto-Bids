@@ -1,11 +1,10 @@
 import React from 'react'
 import { Routes, Route } from 'react-router-dom'
-import { Link, useHistory } from 'react-router-dom'
-import { PORT } from '../../../backend/index'
+//import { Link, useHistory } from 'react-router-dom'
 
 function Dashboard() {
   return (
-    <div>logOptions</div>
+    <div>You're Logged In</div>
   )
 }
 

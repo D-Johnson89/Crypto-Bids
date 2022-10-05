@@ -1,17 +1,13 @@
-import React, { useState } from "react"
-import Button from "react-bootstrap/Button"
-import Form from "react-bootstrap/Form"
+import React, { useState } from 'react'
+import Button from 'react-bootstrap/Button'
+import Form from 'react-bootstrap/Form'
 //import Alert from "react-bootstrap/Alert"
-import { PORT } from "../../../backend/index"
-
-// Save port as variable
-const port = PORT
 
 // Main Login function
 function Login() {
 	//Set email and password states
-	const [email, setEmail] = useState("")
-	const [password, setPassword] = useState("")
+	const [email, setEmail] = useState('')
+	const [password, setPassword] = useState('')
 
 	// Function to log user in
 	async function loginUser(e) {
@@ -19,7 +15,7 @@ function Login() {
 		e.preventDefault()
 
 		// Send data to server to try to login
-		const response = await fetch(`http://localhost:${port}/api/login`, {
+		const response = await fetch('http://localhost:5000/api/login', {
 			method: "POST",
 			headers: {
 				"Content-Type" : "application/json",
@@ -37,7 +33,7 @@ function Login() {
 		if(data.user) {
 			localStorage.setItem('token', data.user)
 			alert('Login Successful')
-			window.location.href = '/home'
+			window.location.href = '/'
 		} else {
 			alert('Email Does Not Exist.')
 		}

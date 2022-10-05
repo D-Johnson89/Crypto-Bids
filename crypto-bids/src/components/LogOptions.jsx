@@ -5,13 +5,13 @@ import Container from 'react-bootstrap/Container'
 import Nav from 'react-bootstrap/Nav'
 import Navbar from 'react-bootstrap/Navbar'
 import NavDropdown from 'react-bootstrap/NavDropdown'
-//import Login from '../pages/Login'
-//import Register from '../pages/Register'
+import Login from '../pages/Login'
+import Register from '../pages/Register'
 
 
 function LogOptions() {
 	return (
-		<Navbar variant="primary" bg="info" expand="lg">
+		<Navbar variant="secondary" bg="primary" expand="lg">
 			<Container fluid>
 				<Navbar.Brand href="/"><FaHome /></Navbar.Brand>
 				<Navbar.Toggle aria-controls="log-options" />
@@ -19,11 +19,19 @@ function LogOptions() {
 					<Nav>
 						<NavDropdown
 							id="log-options-dropdown"
-							title="Dropdown"
+							title={<FaUserCircle/>}
 							menuVariant="info"
 						>
-							<NavDropdown.Item href="../pages/login"><FaUserCheck />Login</NavDropdown.Item>
-							<NavDropdown.Item href="../pages/register"><FaUserPlus />Register</NavDropdown.Item>
+							<NavDropdown.Item href="#">
+								<Link to="/login">
+								<FaUserCheck />Login
+								</Link>
+							</NavDropdown.Item>
+							<NavDropdown.Item href="#">
+								<Link to="/register">
+								<FaUserPlus />Register
+								</Link>
+							</NavDropdown.Item>
 						</NavDropdown>
 					</Nav>
 				</Navbar.Collapse>
