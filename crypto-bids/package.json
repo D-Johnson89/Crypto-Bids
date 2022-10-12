@@ -12,7 +12,6 @@
     "bcrypt": "^5.0.1",
     "bootstrap": "^5.2.0",
     "jquery": "^3.6.1",
-    "jsonwebtoken": "^8.5.1",
     "popper.js": "^1.16.1",
     "react": "^18.2.0",
     "react-auth-kit": "^2.4.0",

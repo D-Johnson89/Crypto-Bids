@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { FaHome, FaUserCircle, FaUserCheck, FaUserPlus } from 'react-icons/fa'
+import { FaHome, FaUserCircle, FaUserCheck, FaUserPlus, FaInfo } from 'react-icons/fa'
 import Container from 'react-bootstrap/Container'
 import Nav from 'react-bootstrap/Nav'
 import Navbar from 'react-bootstrap/Navbar'
@@ -31,6 +31,11 @@ function LogOptions() {
 							<NavDropdown.Item href="#">
 								<Link to="/register">
 								<FaUserPlus />Register
+								</Link>
+							</NavDropdown.Item>
+                            <NavDropdown.Item href="#">
+								<Link to="/aboutUs">
+								<FaInfo />About Us
 								</Link>
 							</NavDropdown.Item>
 						</NavDropdown>

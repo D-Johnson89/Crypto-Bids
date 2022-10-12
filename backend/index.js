@@ -83,7 +83,7 @@ app.post(
 	}
 )
 
-app.get(
+/*app.get(
 	"/api/navoptions", async (req, res) => {
 
 		const jwtToken = req.headers['x-acces-token']
@@ -120,7 +120,7 @@ app.post(
 			res.json({ status: 'error', error: 'invalid token '})
 		}
 	}
-)
+)*/
 
 app.listen(port, () => {
 	console.log(`Server started on port ${port}`)

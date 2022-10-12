@@ -7,6 +7,7 @@ const User = new mongoose.Schema(
 		hash: { type: String, required: true },
 		fiatBal: { type: Number, required: true, default: 0 },
 		tetherBal: { type: Number, required: true, default: 0 },
+        wdAddresses: [],
 		invites: { type: Number, required: true, default: 0 },
 		inviter: { type: String },
 		bids: {
