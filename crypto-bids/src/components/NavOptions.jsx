@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import LogOptions from './LogOptions'
 import Dashboard from './Dashboard'
-import { RequireAuth, useIsAuthenticated, useAuthUser } from 'react-auth-kit'
+import { useIsAuthenticated, useAuthUser } from 'react-auth-kit'
 
 
 // Function to check if Logged In, Determines Nav Option to use
 function NavOptions() {
-	const [username, setUsername] = useState('')
-    const [login, setLogin] = useState('')
+	//const [username, setUsername] = useState('')
+    //const [login, setLogin] = useState('')
 	const isAuthenticated = useIsAuthenticated()
     const auth = useAuthUser()
 		
@@ -43,12 +43,17 @@ function NavOptions() {
 		
 	}, [])
 	console.log(username)*/
-    
-	return (
-        <>
-        {isAuthenticated() ? <Dashboard /> : <LogOptions />}
-        </>
-    )
+    console.log(auth())
+	console.log(isAuthenticated())
+    if(isAuthenticated()) {
+        return (
+            <div>
+                <Dashboard />
+            </div>
+        )
+    } else {
+        return <LogOptions />
+    }
 }
 
 export default NavOptions

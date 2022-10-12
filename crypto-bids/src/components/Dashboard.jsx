@@ -1,19 +1,17 @@
 import React from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { FaUserCircle, FaPiggyBank, FaUserLock, FaShare, FaInfo, FaSignOutAlt, FaTrashAlt, FaHome } from 'react-icons/fa'
-import NavbarBrand from 'react-bootstrap/esm/NavbarBrand'
 import Nav from 'react-bootstrap/Nav'
 import Navbar from 'react-bootstrap/Navbar'
 import NavDropdown from 'react-bootstrap/NavDropdown'
 import Container from 'react-bootstrap/Container'
 import Button from 'react-bootstrap/Button'
-import { useSignOut, useAuthUser } from 'react-auth-kit'
+import { useSignOut } from 'react-auth-kit'
 import AuthCard from '../pages/AuthCard'
 
 // Main User Nav Options
 function Dashboard() {
     const signOut = useSignOut()
-    const auth = useAuthUser()
     const navigate = useNavigate()
 
     function logout() {
@@ -25,9 +23,9 @@ function Dashboard() {
     return (
         <Navbar variant="secondary" bg="primary" expand="lg">
             <Container fluid>
-                <NavbarBrand.Brand href="/"><FaHome /></NavbarBrand.Brand>
-                <NavbarBrand.Toggle aria-controls="dashboard" />
-                <NavbarBrand.Collapse id="dashboard">
+                <Navbar.Brand href="/"><FaHome /></Navbar.Brand>
+                <Navbar.Toggle aria-controls="dashboard" />
+                <Navbar.Collapse id="dashboard">
                     <Nav>
                         <NavDropdown
                             id="log-options-dropdown"
@@ -71,7 +69,7 @@ function Dashboard() {
                             </NavDropdown.Item>
                         </NavDropdown>
                     </Nav>
-                </NavbarBrand.Collapse>
+                </Navbar.Collapse>
             </Container>
         </Navbar>
     )
