@@ -1,13 +1,19 @@
 import React, { useState } from 'react'
+import { useNavigate, Link } from 'react-router-dom'
+import { useSignIn } from 'react-auth-kit'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
+
 //import Alert from "react-bootstrap/Alert"
 
 // Main Login function
 function Login() {
-	//Set email and password states
+	// Set email and password states
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
+	const [error, setError] = useState('')
+	const signIn = useSignIn()
+	const navigate = useNavigate()
 
 	// Function to log user in
 	async function loginUser(e) {
@@ -15,29 +21,43 @@ function Login() {
 		e.preventDefault()
 
 		// Send data to server to try to login
-		const response = await fetch('http://localhost:5000/api/login', {
-			method: "POST",
-			headers: {
-				"Content-Type" : "application/json",
-			},
-			body: JSON.stringify({
-				email,
-				password,
-			}),
-		})
+		try {
+			const response = await fetch('http://localhost:5000/api/login', {
+				method: "POST",
+				headers: {
+					"Content-Type" : "application/json",
+				},
+				body: JSON.stringify({
+					email,
+					password,
+				}),
+			})
 
-		// Make server response readable
-		const data = await response.json()
+			// Sign user in
+            const data = response.json()
+			
+            .then((data) => {
+                signIn({
+                    token: data.token,
+                    expiresIn: 3600,
+                    tokenType: 'Bearer',
+                    authState: { email: data.email, username: data.username },
+                })
+            }).catch((err) => {
+                if (err) setError(err.message)
 
-		/* If successfully logged in, store jwt, redirect to homepage. If not alert as such*/
-		if(data.user) {
-			localStorage.setItem('token', data.user)
-			alert('Login Successful')
-			window.location.href = '/'
-		} else {
-			alert('Email Does Not Exist.')
+                console.log("Error: ", err)
+            })
+
+			navigate('/')
+
+		} catch (err) {
+			if (err) setError(err.message)
+
+			console.log("Error: ", err)
 		}
-		console.log(data)
+
+		
 	}
 
 	return (
@@ -74,6 +94,7 @@ function Login() {
 					Login
 				</Button>
 			</Form>
+			<p className="my-3">Not a member?  Register <Link to='/register'>here</Link>.</p>
 		</div>
 	)
 }

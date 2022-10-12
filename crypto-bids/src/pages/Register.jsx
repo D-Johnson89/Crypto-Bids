@@ -1,19 +1,30 @@
 import React, { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
+import { useSignIn } from 'react-auth-kit'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 
+// Main Register function
 function Register() {
-	const navigate = useNavigate()
-
+	// Set form states
 	const [username, setUsername] = useState('')
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
 	const [confirmation, setConfirmation] = useState('')
+	const navigate = useNavigate()
+	const signIn = useSignIn()
 
+	// Function to register user
 	async function registerUser(e) {
+		// Prevent default page refresh
 		e.preventDefault()
 
+		// Check Passwords match
+		if(password !== confirmation) {
+			alert('Confirmation must match password')
+		}
+
+		// Send data to server to create user
 		const response = await fetch('http://localhost:5000/api/register', {
 			method: "POST",
 			headers: {
@@ -27,23 +38,17 @@ function Register() {
 			}),
 		})
 
-		if(password !== confirmation) {
-			alert('Confirmation must match password')
-		}
-
 		const data = await response.json()
-
-		if (data.status === 'ok') {
-			const token = jwt.sign(
-				{
-					userId: user._id,
-					username: user.username,
-					email: user.email,
-				}, secret
-			)
-
-			localStorage.setItem(token)
-			navigate.push('/dashboard')
+		
+		// Sign user in if successfully registered
+		if (data.message === "Registered Successfully") {
+			signIn({
+				token: response.token,
+				expiresIn: 60,
+				tokenType: 'Bearer',
+				authState: { email: response.email, username: response.username },
+			})
+			navigate('/')
 		}
 	}
 

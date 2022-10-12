@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react'
-import { Routes, Route } from 'react-router-dom'
 import LogOptions from './LogOptions'
 import Dashboard from './Dashboard'
-
+import { RequireAuth, useIsAuthenticated, useAuthUser } from 'react-auth-kit'
 
 
 // Function to check if Logged In, Determines Nav Option to use
 function NavOptions() {
 	const [username, setUsername] = useState('')
+    const [login, setLogin] = useState('')
+	const isAuthenticated = useIsAuthenticated()
+    const auth = useAuthUser()
 		
-	async function populateQuote() {
+	/*async function populateQuote() {
 		const req = await fetch('http://localhost:5000/api/home', {
 			headers: {
 				'x-acces-token': localStorage.getItem('token'),
@@ -18,6 +20,7 @@ function NavOptions() {
 
 		const data = req.json()
 		if(data.status === 'ok') {
+			console.log(data)
 			setUsername(data.username)
 		} else {
 			alert(date.error)
@@ -26,23 +29,26 @@ function NavOptions() {
 
 			
 	useEffect(() => {
+		
 		const token = localStorage.getItem('token')
 		if (token) {
 			const user = jwt.decode(token)
 			if(!user) {
 				localStorage.removeItem('token')
 			} else {
+				console.log(user)
 				populateQuote()
 			}
 		}
 		
 	}, [])
-	console.log(username)
-	if(!username){
-		return <LogOptions />
-	}
-	return <Dashboard />
-	
+	console.log(username)*/
+    
+	return (
+        <>
+        {isAuthenticated() ? <Dashboard /> : <LogOptions />}
+        </>
+    )
 }
 
 export default NavOptions
