@@ -37,12 +37,17 @@ function Login() {
             const data = response.json()
 			
             .then((data) => {
-                signIn({
-                    token: data.token,
-                    expiresIn: 3600,
-                    tokenType: 'Bearer',
-                    authState: { email: data.email, username: data.username },
-                })
+                if (data.email === undefined) {
+                    alert('Email not registered!')
+                } else {
+                    signIn({
+                        token: data.token,
+                        expiresIn: 1440,
+                        tokenType: 'Bearer',
+                        authState: { email: data.email, username: data.username },
+                    })
+                }
+                
             }).catch((err) => {
                 if (err) setError(err.message)
 

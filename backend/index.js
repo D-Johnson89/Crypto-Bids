@@ -51,49 +51,58 @@ app.post(
 		const { email, password } = req.body
         console.log(req.body)
 
-		const user = await User.findOne({ where: { email } }).catch(
-			(err) => {
-				console.log("Error: ", err)
-			}
-		)
+        try {
+            const user = await User.findOne({ where: { email } }).catch(
+                (err) => {
+                    console.log("Error: ", err)
+                }
+            )
 
-		if(!user) {
-			return res
-				.status(400)
-				.json({ message: "Email does not exist!" })
-		}
+            if(!bcrypt.compareSync(password, user.hash)) {
+                return res
+                    .status(400)
+                    .json({ message: "Email or password does not match!", user: false })
+            }
 
-		if(!bcrypt.compareSync(password, user.hash)) {
-			return res
-				.status(400)
-				.json({ message: "Email or password does not match!", user: false })
-		}
-
-		const jwtToken = jwt.sign(
-			{
-				userId: user._id,
-				username: user.username,
-				email: user.email,
-			},
-			secret
-		)
-        //console.log(user)
-		return res
-			.status(200)
-			.json({ message: "Welcome Back!", token: jwtToken, email: email, username: user.username })
-	}
+            const jwtToken = jwt.sign(
+                {
+                    userId: user._id,
+                    username: user.username,
+                    email: user.email,
+                },
+                secret
+            )
+            
+            return res
+                .status(200)
+                .json({ message: "Welcome Back!", token: jwtToken, email: email, username: user.username })
+            } catch {
+                return res
+                    .status(400)
+                    .json({ message: "Email does not exist!" })
+            }
+        }
 )
 
 app.get(
     "/api/addressBook", async (req, res) => {
-        const email = req
-        console.log(email)
-        /*const addresses = await User.where('email').equals(email).select('wdAddresses')
+        const [type, token] = req.headers.authentication.split(' ')
+
+        const email = jwt.verify(token, secret).email
+        
+        const addresses = await User.where('email').equals(email).select('wdAddresses')
         .catch(
 			(err) => {
 				console.log("Error: ", err)
 			}
-		)*/
+		)
+
+        const wdAddresses = addresses[0].wdAddresses
+        console.log(wdAddresses)
+
+        res
+            .status(200)
+            .json({ addresses: wdAddresses})
     }
 )
 

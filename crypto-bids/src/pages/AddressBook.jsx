@@ -5,24 +5,26 @@ import Stack from 'react-bootstrap/Stack'
 import Button from 'react-bootstrap/Button'
 import NavOptions from '../components/NavOptions'
 import { FaPlus } from 'react-icons/fa'
-import { useAuthUser } from 'react-auth-kit'
+import { useAuthHeader } from 'react-auth-kit'
 
 function AddressBook() {
     const navigate = useNavigate()
-    const auth = useAuthUser()
     const [error, setError] = useState(null)
-    const email = auth().email
-    console.log(auth().email)
-    
+    const authHeader = useAuthHeader()
+    const token = authHeader()
+    console.log(token)
+
     const addresses = populateAddresses()
 
     async function populateAddresses() {
-        await fetch('http://localhost:5000/api/addressBook'/*, {
-            method: "GET",
+        await fetch('http://localhost:5000/api/addressBook', {
             headers: {
-                "Content-Type": "application/json",
+                Authentication: `${token}`,
+                credentials: 'include',
             },
-        }*/)
+        })
+            .then(resp => resp.json())
+            .then(json => console.log(json.addresses))
         //console.log(addresses)
     }
 
@@ -36,6 +38,7 @@ function AddressBook() {
                         <FaPlus />Address
                     </Button>
                 </div>
+                
             </Stack>
         </Container>
     )
