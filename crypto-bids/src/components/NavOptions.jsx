@@ -10,6 +10,7 @@ function NavOptions() {
     const auth = useAuthUser()
 		
     console.log('USER: ', auth(), 'SIGNEDIN: ', isAuthenticated())
+    
     return isAuthenticated() ? <Dashboard /> : <LogOptions />
 }
 

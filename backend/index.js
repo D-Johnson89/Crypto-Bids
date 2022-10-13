@@ -49,6 +49,7 @@ app.post(
 app.post(
 	"/api/login", async (req, res) => {
 		const { email, password } = req.body
+        console.log(req.body)
 
 		const user = await User.findOne({ where: { email } }).catch(
 			(err) => {
@@ -83,44 +84,18 @@ app.post(
 	}
 )
 
-/*app.get(
-	"/api/navoptions", async (req, res) => {
-
-		const jwtToken = req.headers['x-acces-token']
-
-		try {
-			const decoded = jwt.verify(token, secret)
-			const username = decoded.username
-			const user = await User.findOne({ username: username })
-
-			return { status: 'ok', username: user.username }
-		} catch {
-			console.log(error)
-			res.json({ status: 'error', error: 'invalid token '})
-		}
-	}
+app.get(
+    "/api/addressBook", async (req, res) => {
+        const email = req
+        console.log(email)
+        /*const addresses = await User.where('email').equals(email).select('wdAddresses')
+        .catch(
+			(err) => {
+				console.log("Error: ", err)
+			}
+		)*/
+    }
 )
-
-app.post(
-	"/api/navoptions", async (req, res) => {
-
-		const jwtToken = req.headers['x-acces-token']
-
-		try {
-			const decoded = jwt.verify(token, secret)
-			const username = decoded.username
-			await User.updateOne(
-				{ username: username },
-				{ $set: {username: req.body.username }}
-				)
-
-			return res.json({ status: 'ok' })
-		} catch {
-			console.log(error)
-			res.json({ status: 'error', error: 'invalid token '})
-		}
-	}
-)*/
 
 app.listen(port, () => {
 	console.log(`Server started on port ${port}`)

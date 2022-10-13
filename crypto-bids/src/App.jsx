@@ -8,6 +8,8 @@ import LogOptions from './components/LogOptions'
 import Dashboard from './components/Dashboard'
 import AboutUs from './pages/AboutUs'
 import { RequireAuth } from 'react-auth-kit'
+import AddressBook from './pages/AddressBook'
+import AddAddress from './pages/AddAddress'
 
 
 function App() {
@@ -24,6 +26,16 @@ function App() {
       <Route path='/register' element={<Register />} />
       <Route path='/navoptions' element={<NavOptions />} />
       <Route path='/aboutUs' element={<AboutUs />} />
+      <Route path='/addressBook' element={
+        <RequireAuth loginPath='/login' >
+            <AddressBook />
+        </RequireAuth>
+      } />
+      <Route path='/addAddress' element={
+        <RequireAuth loginPath='/login' >
+            <AddAddress />
+        </RequireAuth>
+      } />
     </Routes>
   )
 }
