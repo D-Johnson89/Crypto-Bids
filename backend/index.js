@@ -49,10 +49,10 @@ app.post(
 app.post(
 	"/api/login", async (req, res) => {
 		const { email, password } = req.body
-        console.log(req.body)
+        //console.log(req.body)
 
         try {
-            const user = await User.findOne({ where: { email } }).catch(
+            const user = await User.findOne({ email }).catch(
                 (err) => {
                     console.log("Error: ", err)
                 }
@@ -76,33 +76,63 @@ app.post(
             return res
                 .status(200)
                 .json({ message: "Welcome Back!", token: jwtToken, email: email, username: user.username })
-            } catch {
-                return res
-                    .status(400)
-                    .json({ message: "Email does not exist!" })
-            }
+        } catch (err) {
+            return res
+                .status(400)
+                .json({ message: "Email does not exist!" })
         }
+    }
 )
 
 app.get(
     "/api/addressBook", async (req, res) => {
-        const [type, token] = req.headers.authentication.split(' ')
+        const token = req.headers.authentication.split(' ')[1]
 
         const email = jwt.verify(token, secret).email
         
-        const addresses = await User.where('email').equals(email).select('wdAddresses')
+        const addresses = await User.where('email').equals(email).select('addresses')
         .catch(
 			(err) => {
 				console.log("Error: ", err)
 			}
 		)
 
-        const wdAddresses = addresses[0].wdAddresses
+        const wdAddresses = addresses[0].addresses
         console.log(wdAddresses)
 
-        res
+        return res
             .status(200)
-            .json({ addresses: wdAddresses})
+            .json({ addresses: wdAddresses })
+    }
+)
+
+app.post(
+    "/api/addAddress", async (req, res) => {
+        const { institute, address } = req.body
+
+        const token = req.headers.authentication.split(' ')[1]
+
+        const email = jwt.verify(token, secret).email
+
+        const wdAddress = {
+            institute: institute,
+            address: address,
+            withdrawn: 0,
+        }
+        console.log(`Email: ${email}`)
+        try {
+            await User.findOneAndUpdate({ email }, { $push: { addresses: wdAddress } })
+            console.log(wdAddress)
+            return res
+                .status(201)
+                .json({ message: 'Address Saved'})
+        } catch (err) {
+            console.log(err)
+            return res
+                .status(400)
+                .json({ message: 'Address not saved'})
+        }
+
     }
 )
 

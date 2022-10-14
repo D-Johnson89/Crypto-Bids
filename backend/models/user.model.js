@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
 
-const wdAddresses = new mongoose.Schema(
+const wdAddress = new mongoose.Schema(
     {
         name: { type: String },
-        address: { type: String },
+        address: { type: String, unique: true },
         withdrawn: { type: Number},
     }
 )
@@ -31,7 +31,7 @@ const User = new mongoose.Schema(
 		hash: { type: String, required: true },
 		fiatBal: { type: Number, required: true, default: 0 },
 		tetherBal: { type: Number, required: true, default: 0 },
-        addresses: { type: [wdAddresses], default: undefined },
+        addresses: { type: [wdAddress], default: undefined },
 		invites: { type: Number, required: true, default: 0 },
 		inviter: { type: String },
 		bids: { type: [Bids], default: undefined },

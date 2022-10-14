@@ -12,22 +12,25 @@ function AddressBook() {
     const [error, setError] = useState(null)
     const authHeader = useAuthHeader()
     const token = authHeader()
-    console.log(token)
 
     const addresses = populateAddresses()
 
     async function populateAddresses() {
-        await fetch('http://localhost:5000/api/addressBook', {
+        try {
+            const response = await fetch('http://localhost:5000/api/addressBook', {
             headers: {
                 Authentication: `${token}`,
                 credentials: 'include',
             },
         })
-            .then(resp => resp.json())
-            .then(json => console.log(json.addresses))
-        //console.log(addresses)
+            const data = response.json()
+            console.log(data)
+        } catch {
+            if (err) setError(err.message)
+            console.log('Error: ', error)
+        }
     }
-
+        
     return (
         <Container fluid>
             <NavOptions />

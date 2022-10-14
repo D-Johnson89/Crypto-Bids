@@ -35,8 +35,7 @@ function Login() {
 
 			// Sign user in
             const data = response.json()
-			
-            .then((data) => {
+            .then(data => {
                 if (data.email === undefined) {
                     alert('Email not registered!')
                 } else {
@@ -51,7 +50,7 @@ function Login() {
             }).catch((err) => {
                 if (err) setError(err.message)
 
-                console.log("Error: ", err)
+                console.log("Error: ", error)
             })
 
 			navigate('/')
@@ -59,7 +58,7 @@ function Login() {
 		} catch (err) {
 			if (err) setError(err.message)
 
-			console.log("Error: ", err)
+			console.log("Error: ", error)
 		}
 
 		
