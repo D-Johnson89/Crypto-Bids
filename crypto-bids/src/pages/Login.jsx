@@ -35,7 +35,7 @@ function Login() {
 
 			// Sign user in
             const data = response.json()
-            .then(data => {
+            .then((data) => {
                 if (data.email === undefined) {
                     alert('Email not registered!')
                 } else {

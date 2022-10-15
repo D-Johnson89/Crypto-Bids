@@ -17,7 +17,7 @@ mongoose.connect("mongodb+srv://djohnson3009:Fy6bCReTINpXOKjc@users.xbb0hed.mong
 
 app.post(
 	'/api/register', async (req, res) => {
-		console.log(req.body)
+
 		try {
 			const user = await User.create({
 				username: req.body.username,
@@ -32,14 +32,14 @@ app.post(
 					email: user.email,
 				}, secret
 			)
-			res
+			return res
 				.status(200)
 				.json({ message: "Registered Successfully", token: jwtToken, email: user.email, username: user.username })
 			
 		} catch (err) {
 			console.log(err)
 			
-			res
+			return res
                 .status(409)
                 .json({ error: "Email or username already exist" })
 		}
@@ -49,7 +49,6 @@ app.post(
 app.post(
 	"/api/login", async (req, res) => {
 		const { email, password } = req.body
-        //console.log(req.body)
 
         try {
             const user = await User.findOne({ email }).catch(
@@ -87,15 +86,16 @@ app.post(
 app.get(
     "/api/addressBook", async (req, res) => {
         const token = req.headers.authentication.split(' ')[1]
-
         const email = jwt.verify(token, secret).email
-        
-        const addresses = await User.where('email').equals(email).select('addresses')
-        .catch(
-			(err) => {
-				console.log("Error: ", err)
-			}
-		)
+        console.log(token, email)
+
+        try{
+            const addresses = await User.where('email').equals(email).select('addresses')
+            .catch(
+			    (err) => {
+				    console.log("Error: ", err)
+			    }
+		    )
 
         const wdAddresses = addresses[0].addresses
         console.log(wdAddresses)
@@ -103,6 +103,11 @@ app.get(
         return res
             .status(200)
             .json({ addresses: wdAddresses })
+        } catch (err) {
+            return res
+                .status(400)
+                .json({ addresses: []})
+        }
     }
 )
 
@@ -113,13 +118,14 @@ app.post(
         const token = req.headers.authentication.split(' ')[1]
 
         const email = jwt.verify(token, secret).email
+        //console.log(`INSTITUTE: ${institute}, ADDRESS: ${address}, EMAIL: ${email}`)
 
         const wdAddress = {
             institute: institute,
             address: address,
             withdrawn: 0,
         }
-        console.log(`Email: ${email}`)
+        console.log(wdAddress)
         try {
             await User.findOneAndUpdate({ email }, { $push: { addresses: wdAddress } })
             console.log(wdAddress)
@@ -127,7 +133,6 @@ app.post(
                 .status(201)
                 .json({ message: 'Address Saved'})
         } catch (err) {
-            console.log(err)
             return res
                 .status(400)
                 .json({ message: 'Address not saved'})

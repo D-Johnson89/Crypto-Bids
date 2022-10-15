@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const wdAddress = new mongoose.Schema(
     {
-        name: { type: String },
+        institute: { type: String },
         address: { type: String, unique: true },
         withdrawn: { type: Number},
     }
