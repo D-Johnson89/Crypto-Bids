@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Container from 'react-bootstrap/Container'
 import Card from 'react-bootstrap/Card'
@@ -10,13 +10,34 @@ import { useAuthHeader } from 'react-auth-kit'
 
 function AddressBook() {
     const navigate = useNavigate()
-    const [error, setError] = useState(null)
     const authHeader = useAuthHeader()
+    const [error, setError] = useState(null)
+    const [addresses, setAddresses] = useState(null)
     const token = authHeader()
 
-    const addresses = populateAddresses()
+    useEffect(() => {
+        //function populateAddresses() {
+            
+                const response = fetch('http://localhost:5000/api/addressBook', {
+                    headers: {
+                        Authentication: `${token}`,
+                        credentials: 'include',
+                    },
+                })
+                .then(data => response.json())
 
-    // First attempt using a function with wdAddresses.forEach
+                //const data = response.json()
+                console.log(data)
+                /*.then((data) => {
+                    const wdAddresses = data.addresses
+                    console.log(wdAddresses)
+                })*/
+             
+        //}
+    }, [addresses])
+
+    //const response = populateAddresses()
+
     /*function makeCard(obj, index, list) {
         const name = obj.institute
         const address = obj.address
@@ -34,16 +55,16 @@ function AddressBook() {
         </li>
     }*/
 
-    async function populateAddresses() {
+    /*async function populateAddresses() {
         try {
-            const response = await fetch('http://localhost:5000/api/addressBook', {
+            const addresses = await fetch('http://localhost:5000/api/addressBook', {
                 headers: {
                     Authentication: `${token}`,
                     credentials: 'include',
                 },
             })
 
-            const data = response.json()
+            const data = addresses.json()
             .then((data) => {
                 const wdAddresses = data.addresses
                 console.log(wdAddresses)
@@ -63,7 +84,7 @@ function AddressBook() {
                                 </Card.Body>
                                 <Card.Footer className='text-muted'>{obj.withdrawn}</Card.Footer>
                             </Card>
-                        </div>
+                        </div>*/
 
                         // second attempt to create inside async function
                     /*{
@@ -72,14 +93,16 @@ function AddressBook() {
                         const amount = obj.withdrawn
                         list[index] = [name, address, amount]
                     
-                    }*/)
-                }
+                    })*/
+                /*}
             })
         } catch {
             if (err) setError(err.message)
             console.log('Error: ', error)
         }
-    }
+        const addresses = response.json()
+        console.log(addresses)
+    }*/
         
     return (
         <Container fluid>
@@ -91,7 +114,9 @@ function AddressBook() {
                         <FaPlus />Address
                     </Button>
                 </div>
-                {component}
+                <div>
+                    {addresses}
+                </div>
             </Stack>
         </Container>
     )
