@@ -37,9 +37,7 @@ function AddressBook() {
                 console.log('Addresses: ', addresses)
                 setLoading(false)
             })
-            .finally(
-                addresses.map
-            )
+            
         } catch (err) {
             setError(err)
             console.log(error)
@@ -72,21 +70,33 @@ function AddressBook() {
     }, [])
 
     
-    
+    console.log(addresses)
 
     return (
         isLoading ? <div>Loading...</div> :
         <Container fluid>
             <NavOptions />
             <h1>Withdrawal Addresses</h1>
+            <Container>
             <Stack gap={3}>
                 <div className="bg-secondary border">
-                    <Button type="primary" onClick={() => navigate('/addAddress')}>
+                    <Button type="primary" onClick={() => {addresses.length == 5 ? alert('no more than 5 addresses') : navigate('/addAddress')}}>
                         <FaPlus />Address
                     </Button>
                 </div>
-                
+                {addresses.map((address) => (
+                    <div key={address._id}>
+                        <Card className='text-center'>
+                    <Card.Header>{address.institute}</Card.Header>
+                    <Card.Body>
+                        <Card.Title>{address.address}</Card.Title>
+                    </Card.Body>
+                    <Card.Footer className='text-muted'>{address.withdrawn}</Card.Footer>
+                </Card>
+                    </div>
+                ))}
             </Stack>
+            </Container>
         </Container>
     )
 }
