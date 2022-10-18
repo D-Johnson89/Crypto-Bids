@@ -23,17 +23,17 @@ function LogOptions() {
 							title={<FaUserCircle/>}
 							menuVariant="info"
 						>
-							<NavDropdown.Item href="#">
+							<NavDropdown.Item>
 								<Link to="/login">
 								<FaUserCheck />Login
 								</Link>
 							</NavDropdown.Item>
-							<NavDropdown.Item href="#">
+							<NavDropdown.Item>
 								<Link to="/register">
 								<FaUserPlus />Register
 								</Link>
 							</NavDropdown.Item>
-                            <NavDropdown.Item href="#">
+                            <NavDropdown.Item>
 								<Link to="/aboutUs">
 								<FaInfo />About Us
 								</Link>

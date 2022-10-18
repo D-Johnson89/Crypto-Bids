@@ -32,37 +32,37 @@ function Dashboard() {
                             title={<FaUserCircle />}
                             menuVariant="info"
                         >
-                            <NavDropdown.Item href="#">
+                            <NavDropdown.Item>
                                 <Link to="/card">
                                     <AuthCard />
                                 </Link>
                             </NavDropdown.Item>
-                            <NavDropdown.Item href="#">
+                            <NavDropdown.Item>
                                 <Link to="/addressBook">
                                     <FaPiggyBank />Withdrawal Address
                                 </Link>
                             </NavDropdown.Item>
-                            <NavDropdown.Item href="#">
+                            <NavDropdown.Item>
                                 <Link to="/changePW">
                                     <FaUserLock />Change Password
                                 </Link>
                             </NavDropdown.Item>
-                            <NavDropdown.Item href="#">
+                            <NavDropdown.Item>
                                 <Link to="/invitation">
                                     <FaShare />VIP Level
                                 </Link>
                             </NavDropdown.Item>
-                            <NavDropdown.Item href="#">
+                            <NavDropdown.Item>
                                 <Link to="/aboutUs">
                                     <FaInfo />About Us
                                 </Link>
                             </NavDropdown.Item>
-                            <NavDropdown.Item href="#">
+                            <NavDropdown.Item>
                                 <Link to="/deleteAcc">
                                     <FaTrashAlt />Delete Account
                                 </Link>
                             </NavDropdown.Item>
-                            <NavDropdown.Item href="#">
+                            <NavDropdown.Item>
                                 <Button variant="primary" onClick={() => logout()}>
                                     <FaSignOutAlt />Logout
                                 </Button>

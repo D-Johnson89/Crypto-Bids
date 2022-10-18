@@ -17,7 +17,7 @@ function Login() {
 
 	// Function to log user in
 	async function loginUser(e) {
-		//Prevent default page refresh
+		// Prevent default page refresh
 		e.preventDefault()
 
 		// Send data to server to try to login

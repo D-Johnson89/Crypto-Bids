@@ -8,103 +8,74 @@ import NavOptions from '../components/NavOptions'
 import { FaPlus } from 'react-icons/fa'
 import { useAuthHeader } from 'react-auth-kit'
 
+// Main AddressBook Function
 function AddressBook() {
     const navigate = useNavigate()
     const authHeader = useAuthHeader()
     const [error, setError] = useState(null)
-    const [addresses, setAddresses] = useState(null)
+    const [addresses, setAddresses] = useState([])
+    const [isLoading, setLoading] = useState(false)
     const token = authHeader()
+    let testArr = []
 
-    useEffect(() => {
-        //function populateAddresses() {
-            
-                const response = fetch('http://localhost:5000/api/addressBook', {
-                    headers: {
-                        Authentication: `${token}`,
-                        credentials: 'include',
-                    },
-                })
-                .then(data => response.json())
+    // Fetch data from server
+    const fetchAddresses = async () => {
+        setLoading(true)
+        try {
 
-                //const data = response.json()
-                console.log(data)
-                /*.then((data) => {
-                    const wdAddresses = data.addresses
-                    console.log(wdAddresses)
-                })*/
-             
-        //}
-    }, [addresses])
+            const response = await fetch('http://localhost:5000/api/addressBook', {
+                headers: {
+                    Authentication: `${token}`
+                }
+            })
+            .then((response) => {
+                return response.json()
+            })
+            .then((data) => {
+                const array = data['addresses']
+                setAddresses(array)
+                console.log('Addresses: ', addresses)
+                setLoading(false)
+            })
+            .finally(
+                addresses.map
+            )
+        } catch (err) {
+            setError(err)
+            console.log(error)
+        }
+        console.log('test arr: ', testArr)
+        
+    }
 
-    //const response = populateAddresses()
-
-    /*function makeCard(obj, index, list) {
+    // Make Withdrawal Address Cards Arrays
+    function makeCards(obj, index, list) {
         const name = obj.institute
         const address = obj.address
         const amount = obj.withdrawn
         list[index] = [name, address, amount]
-        const content = 
-        <li>
-            <Card className='text-center'>
-                <Card.Header>{name}</Card.Header>
-                <Card.Body>
-                    <Card.Title>{address}</Card.Title>
-                </Card.Body>
-                <Card.Footer className='text-muted'>{amount}</Card.Footer>
-            </Card>
-        </li>
-    }*/
+        return (
+            <div>
+                <Card className='text-center'>
+                    <Card.Header>{name}</Card.Header>
+                    <Card.Body>
+                        <Card.Title>{address}</Card.Title>
+                    </Card.Body>
+                    <Card.Footer className='text-muted'>{amount}</Card.Footer>
+                </Card>
+            </div>
+        )
+    }
 
-    /*async function populateAddresses() {
-        try {
-            const addresses = await fetch('http://localhost:5000/api/addressBook', {
-                headers: {
-                    Authentication: `${token}`,
-                    credentials: 'include',
-                },
-            })
+    useEffect(() => {
+        fetchAddresses()
+    }, [])
 
-            const data = addresses.json()
-            .then((data) => {
-                const wdAddresses = data.addresses
-                console.log(wdAddresses)
-                if (wdAddresses.length < 1) {
-                    //console.log(wdAddresses)
-                    const component = () =>
-                    <div>
-                        <h3>No Saved Addresses</h3>
-                    </div>
-                } else {
-                    const component = wdAddresses.forEach((obj, index, list) => 
-                        <div>
-                            <Card className='text-center'>
-                                <Card.Header>{obj.institute}</Card.Header>
-                                <Card.Body>
-                                    <Card.Title>{obj.address}</Card.Title>
-                                </Card.Body>
-                                <Card.Footer className='text-muted'>{obj.withdrawn}</Card.Footer>
-                            </Card>
-                        </div>*/
+    
+    
 
-                        // second attempt to create inside async function
-                    /*{
-                        const name = obj.institute
-                        const address = obj.address
-                        const amount = obj.withdrawn
-                        list[index] = [name, address, amount]
-                    
-                    })*/
-                /*}
-            })
-        } catch {
-            if (err) setError(err.message)
-            console.log('Error: ', error)
-        }
-        const addresses = response.json()
-        console.log(addresses)
-    }*/
-        
     return (
+        isLoading ? <div>Loading...</div> :
         <Container fluid>
             <NavOptions />
             <h1>Withdrawal Addresses</h1>
@@ -114,9 +85,7 @@ function AddressBook() {
                         <FaPlus />Address
                     </Button>
                 </div>
-                <div>
-                    {addresses}
-                </div>
+                
             </Stack>
         </Container>
     )
