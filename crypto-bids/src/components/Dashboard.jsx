@@ -33,7 +33,7 @@ function Dashboard() {
                             menuVariant="info"
                         >
                             <NavDropdown.Item>
-                                <Link to="/card">
+                                <Link to="/authCard">
                                     <AuthCard />
                                 </Link>
                             </NavDropdown.Item>

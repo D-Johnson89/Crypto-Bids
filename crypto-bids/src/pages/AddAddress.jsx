@@ -33,11 +33,12 @@ function AddAddress() {
                     address,
                 }),
             })
-
-            const data = response.json()
-            console.log(data)
-
-
+            .then((response) => {
+                return response.json()
+            })
+            .then(
+                navigate('/addressBook')
+            )
         } catch (err) {
             if (err) setError(err.message)
             console.log('Error: ', error)

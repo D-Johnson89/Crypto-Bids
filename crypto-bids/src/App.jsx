@@ -10,6 +10,7 @@ import AboutUs from './pages/AboutUs'
 import { RequireAuth } from 'react-auth-kit'
 import AddressBook from './pages/AddressBook'
 import AddAddress from './pages/AddAddress'
+import AuthCard from './pages/AuthCard'
 
 
 function App() {
@@ -34,6 +35,11 @@ function App() {
       <Route path='/addAddress' element={
         <RequireAuth loginPath='/login' >
             <AddAddress />
+        </RequireAuth>
+      } />
+      <Route path='/authCard' element={
+        <RequireAuth loginPath='/login' >
+            <AuthCard />
         </RequireAuth>
       } />
     </Routes>

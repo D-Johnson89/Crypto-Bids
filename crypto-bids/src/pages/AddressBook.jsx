@@ -8,7 +8,7 @@ import NavOptions from '../components/NavOptions'
 import { FaPlus } from 'react-icons/fa'
 import { useAuthHeader } from 'react-auth-kit'
 
-// Main AddressBook Function
+// Main AddressBook Component
 function AddressBook() {
     const navigate = useNavigate()
     const authHeader = useAuthHeader()
@@ -16,7 +16,6 @@ function AddressBook() {
     const [addresses, setAddresses] = useState([])
     const [isLoading, setLoading] = useState(false)
     const token = authHeader()
-    let testArr = []
 
     // Fetch data from server
     const fetchAddresses = async () => {
@@ -33,44 +32,58 @@ function AddressBook() {
             })
             .then((data) => {
                 const array = data['addresses']
-                setAddresses(array)
-                console.log('Addresses: ', addresses)
+                array.length < 1 ? setAddresses(['No Saved Addresses']) : setAddresses(array)
                 setLoading(false)
             })
             
         } catch (err) {
             setError(err)
-            console.log(error)
+            console.log('Error: ', error)
         }
-        console.log('test arr: ', testArr)
         
-    }
-
-    // Make Withdrawal Address Cards Arrays
-    function makeCards(obj, index, list) {
-        const name = obj.institute
-        const address = obj.address
-        const amount = obj.withdrawn
-        list[index] = [name, address, amount]
-        return (
-            <div>
-                <Card className='text-center'>
-                    <Card.Header>{name}</Card.Header>
-                    <Card.Body>
-                        <Card.Title>{address}</Card.Title>
-                    </Card.Body>
-                    <Card.Footer className='text-muted'>{amount}</Card.Footer>
-                </Card>
-            </div>
-        )
     }
 
     useEffect(() => {
         fetchAddresses()
     }, [])
 
-    
-    console.log(addresses)
+    function deleteAddress(item) {
+        const confirmBox = window.confirm(
+            'Do you really want to delete this address?'
+        )
+
+        const doDelete = async () => {
+            try {
+                //console.log(confirmBox, item)
+                const response = await fetch(`http://localhost:5000/api/addressBook/`, {
+                    method: "DELETE",
+                    headers: {
+                        Authentication: `${token}`,
+                        AddressId: `${item}`,
+                    }
+                })
+                .then((response) => {
+                    return response.json()
+                })
+                .then((data) => {
+                    data.message ? fetchAddresses() : alert(data.message)
+                })
+            } catch (err) {
+                setError(err)
+                console.log(error)
+            }
+        }
+
+        if (confirmBox) {
+            doDelete()
+        }
+    }
+
+    const NoAddress = () => {
+        return (<div>
+            <h3>No Saved Addresses</h3>
+        </div>)
+    }
 
     return (
         isLoading ? <div>Loading...</div> :
@@ -84,14 +97,24 @@ function AddressBook() {
                         <FaPlus />Address
                     </Button>
                 </div>
-                {addresses.map((address) => (
+                {addresses == 'No Saved Addresses' ?
+                <NoAddress /> :
+                    addresses.map((address) => (
                     <div key={address._id}>
                         <Card className='text-center'>
-                    <Card.Header>{address.institute}</Card.Header>
+                    <Card.Header><h4>{address.institute}</h4></Card.Header>
                     <Card.Body>
                         <Card.Title>{address.address}</Card.Title>
+                        <Card.Text className='text-muted'>{address.withdrawn}</Card.Text>
                     </Card.Body>
-                    <Card.Footer className='text-muted'>{address.withdrawn}</Card.Footer>
+                    <Card.Footer>
+                        <Button
+                            variant='primary'
+                            onClick={() => deleteAddress(address._id)}
+                        >
+                            Delete
+                        </Button>
+                    </Card.Footer>
                 </Card>
                     </div>
                 ))}

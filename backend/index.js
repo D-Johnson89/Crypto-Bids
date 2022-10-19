@@ -87,7 +87,7 @@ app.get(
     "/api/addressBook", async (req, res) => {
         const token = req.headers.authentication.split(' ')[1]
         const email = jwt.verify(token, secret).email
-        console.log(token, email)
+        //console.log(token, email)
 
         try{
             const addresses = await User.where('email').equals(email).select('addresses')
@@ -97,8 +97,8 @@ app.get(
 			    }
 		    )
 
-        const wdAddresses = addresses[0].addresses
-        console.log(wdAddresses)
+        const wdAddresses = (addresses[0].addresses == undefined) ? 'No Saved Addresses' : addresses[0].addresses
+        
 
         return res
             .status(200)
@@ -111,6 +111,29 @@ app.get(
     }
 )
 
+app.delete(
+    "/api/addressBook/", async (req, res) => {
+        const token = req.headers.authentication.split(' ')[1]
+        const address = req.headers.addressid
+        console.log(address)
+        const email = jwt.verify(token, secret).email
+        
+        try {
+            await User.updateOne(
+                { email: email }, { $pull: { addresses: { _id: address }}}
+            )
+    
+            return res
+                .status(201)
+                .json({ message: 'Address deleted' })
+        } catch (err) {
+            return res
+                .status(400)
+                .json({ message: 'Something went wrong!' })
+        }
+    }
+)
+
 app.post(
     "/api/addAddress", async (req, res) => {
         const { institute, address } = req.body
@@ -118,26 +141,43 @@ app.post(
         const token = req.headers.authentication.split(' ')[1]
 
         const email = jwt.verify(token, secret).email
-        //console.log(`INSTITUTE: ${institute}, ADDRESS: ${address}, EMAIL: ${email}`)
 
         const wdAddress = {
             institute: institute,
             address: address,
             withdrawn: 0,
         }
-        console.log(wdAddress)
+        
         try {
             await User.findOneAndUpdate({ email }, { $push: { addresses: wdAddress } })
-            console.log(wdAddress)
+            
             return res
                 .status(201)
-                .json({ message: 'Address Saved'})
+                .json({ message: 'Address Saved' })
         } catch (err) {
             return res
                 .status(400)
-                .json({ message: 'Address not saved'})
+                .json({ message: 'Address not saved' })
         }
 
+    }
+)
+
+app.get(
+    '/api/authCard', async (req, res) => {
+        const token = req.headers.split(' ')[1]
+        const email = jwt.verify(token, secret).email
+
+        try {
+            const cardData = await User.where('email').equals(email).select('email', 'tetherBal').catch(
+                (err) => {
+				    console.log("Error: ", err)
+			    }
+            )
+            console.log(cardData)
+        } catch (err) {
+
+        }
     }
 )
 
