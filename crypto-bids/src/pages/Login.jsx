@@ -11,7 +11,7 @@ function Login() {
 	// Set email and password states
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
-	const [error, setError] = useState('')
+	const [error, setError] = useState(null)
 	const signIn = useSignIn()
 	const navigate = useNavigate()
 
@@ -32,12 +32,14 @@ function Login() {
 					password,
 				}),
 			})
-
-			// Sign user in
-            const data = response.json()
-            .then((data) => {
+            .then((response) => {
+                return response.json()
+            })
+		    .then((data) => {
+                // Check for correct email
                 if (data.email === undefined) {
                     alert('Email not registered!')
+                // Sign in user
                 } else {
                     signIn({
                         token: data.token,
@@ -46,7 +48,6 @@ function Login() {
                         authState: { email: data.email, username: data.username },
                     })
                 }
-                
             }).catch((err) => {
                 if (err) setError(err.message)
 
@@ -55,6 +56,7 @@ function Login() {
 
 			navigate('/')
 
+        // Catch errors
 		} catch (err) {
 			if (err) setError(err.message)
 

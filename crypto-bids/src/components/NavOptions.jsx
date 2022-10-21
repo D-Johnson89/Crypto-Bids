@@ -5,8 +5,9 @@ import { useIsAuthenticated } from 'react-auth-kit'
 
 
 // Function to check if Logged In, Determines Nav Option to use
-function NavOptions() {
+function NavOptions(user) {
 	const isAuthenticated = useIsAuthenticated()
+    console.log(user)
     
     return isAuthenticated() ? <Dashboard /> : <LogOptions />
 }

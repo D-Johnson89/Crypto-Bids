@@ -1,16 +1,49 @@
-const express = require('express')
-const router = express.Router()
-const { getUser, setUser, updateUser, deleteUser } = require('../controllers/userController')
+const router = require('express').Router()
+const userCtrl = require('../controllers/userController')
+const jwt = require('jsonwebtoken')
+const secret = process.env.SECRET || 'MY_S3CR3T_K3Y'
 
-router.route('/').get(getUser).post(setUser)
-router.router('/:id').put(updateUser).delete(deleteUser)
+// Call for every request
+router.use((req, res, next) => {
+    let token = req.get('Authentication')
+    if (token) {
+        token = token.replace('Bearer ', '')
+        jwt.verify(token, secret, (error, decode) => {
+            if (error) next(error)
+            else {
+                // Token is verified
+                req.username = decoded.username
+                req._id = decoded._id
+                req.email = decoded.email
+                // Next controller function
+                next()
+            }
+        })
+    } else {
+        next()
+    }
+})
 
-/*router.get('/', getUser)
+// Check for authentication
+const authenticated = (req, res, next) => {
+    if (!req.username) {
+        res.status(403).json({ message: 'User not authenticated' })
+    } else {
+        next()
+    }
+}
 
-router.post("/", setUser)
+// Unsecure routes
+router.post('/api/register', userCtrl.setUser)
+router.post('/api/login', userCtrl.getUser)
 
-router.put('/:id', updateUser)
 
-router.delete('/:id', deleteUser)*/
+// Secure routes
+//router.get('/authCard', userCtrl.getCard)
+/*
+    @AuthCard
+    @ChangePW
+    @DeleteAcc
+*/
 
 module.exports = router
