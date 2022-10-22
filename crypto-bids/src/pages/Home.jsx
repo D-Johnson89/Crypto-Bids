@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Routes, Route, useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import NavOptions from '../components/NavOptions'
 import { useIsAuthenticated } from 'react-auth-kit'
 
@@ -26,7 +26,7 @@ function Home() {
         }
         
     }, [user])
-
+    console.log(user)
   return (
     <div>
       <NavOptions user={user} />

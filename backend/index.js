@@ -18,13 +18,12 @@ app.use(express.urlencoded({ extended: false }))
 
 // Mount app
 app.use(function(req, res, next) {
-    res.header('Access-Control-Allow-Origin', `http://localhost:5173`)
+    res.header('Access-Control-Allow-Origin', `http://localhost:5000`)
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authentication')
     next()
 })
 
 // Routes
-app.use('/api/register', require('./routes/userRoutes'))
-app.use('/api/login', require('./routes/userRoutes'))
+app.use('/api/users', require('./routes/users'))
 
 app.listen(port, () => console.log(`Server started on port ${port}`))

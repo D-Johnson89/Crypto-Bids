@@ -34,8 +34,8 @@ const authenticated = (req, res, next) => {
 }
 
 // Unsecure routes
-router.post('/api/register', userCtrl.setUser)
-router.post('/api/login', userCtrl.getUser)
+router.post('/register', userCtrl.setUser)
+router.post('/login', userCtrl.getUser)
 
 
 // Secure routes

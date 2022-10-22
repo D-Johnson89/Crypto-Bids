@@ -22,7 +22,7 @@ function Login() {
 
 		// Send data to server to try to login
 		try {
-			const response = await fetch('http://localhost:5000/api/login', {
+			const response = await fetch('/api/users/login', {
 				method: "POST",
 				headers: {
 					"Content-Type" : "application/json",
@@ -54,8 +54,15 @@ function Login() {
                 console.log("Error: ", error)
             })
 
+            const member = {
+                username: data.username,
+                email: data.email,
+                balance: data.balance,
+            }
+
 			navigate('/')
 
+            console.log(member)
         // Catch errors
 		} catch (err) {
 			if (err) setError(err.message)
