@@ -12,6 +12,7 @@ function Login() {
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
 	const [error, setError] = useState(null)
+    const [user, setUser] = useState(null)
 	const signIn = useSignIn()
 	const navigate = useNavigate()
 
@@ -22,7 +23,7 @@ function Login() {
 
 		// Send data to server to try to login
 		try {
-			const response = await fetch('/api/users/login', {
+			const response = await fetch('http://localhost:5000/api/users/login', {
 				method: "POST",
 				headers: {
 					"Content-Type" : "application/json",
@@ -36,6 +37,7 @@ function Login() {
                 return response.json()
             })
 		    .then((data) => {
+                console.log(data)
                 // Check for correct email
                 if (data.email === undefined) {
                     alert('Email not registered!')
@@ -48,21 +50,32 @@ function Login() {
                         authState: { email: data.email, username: data.username },
                     })
                 }
-            }).catch((err) => {
+            })
+            .then((data) => {
+                const member = {
+                    username: data.username,
+                    email: data.email,
+                    balance: data.balance,
+                }
+                
+                setUser(member)
+            })
+            .finally(() => {
+                navigate('/', {
+                    state: {
+                        username: user.username,
+                        email: user.email,
+                        balance: user.balance,
+                    },
+                })
+            })
+            .catch((err) => {
                 if (err) setError(err.message)
 
                 console.log("Error: ", error)
             })
+            
 
-            const member = {
-                username: data.username,
-                email: data.email,
-                balance: data.balance,
-            }
-
-			navigate('/')
-
-            console.log(member)
         // Catch errors
 		} catch (err) {
 			if (err) setError(err.message)

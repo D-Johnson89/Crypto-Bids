@@ -49,7 +49,7 @@ async function setUser (req, res) {
 async function getUser(req, res) {
     // Put form data into variables
     const { email, password } = req.body
-    console.log(`Email: ${email}, Password: ${password}`)
+    
     // Try to find user data
     try {
         // Create user variable if user found

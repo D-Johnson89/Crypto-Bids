@@ -11,7 +11,7 @@ function Home() {
     const isAuthenticated = useIsAuthenticated()
     //const [loading, setLoading] = useState(false)
     //const [error, setError] = useState(null)
-
+    
     useEffect(() => {
         if(isAuthenticated()) {
             const member = {
@@ -25,7 +25,7 @@ function Home() {
             setUser(null)
         }
         
-    }, [user])
+    }, [])
     console.log(user)
   return (
     <div>
