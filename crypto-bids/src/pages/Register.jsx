@@ -25,7 +25,7 @@ function Register() {
 		}
 
 		// Send data to server to create user
-		const response = await fetch('http://localhost:5000/api/register', {
+		const response = await fetch('http://localhost:5000/api/users/register', {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -37,19 +37,27 @@ function Register() {
 				confirmation,
 			}),
 		})
-
-		const data = await response.json()
-		
-		// Sign user in if successfully registered
-		if (data.message === "Registered Successfully") {
-			signIn({
-				token: response.token,
-				expiresIn: 60,
-				tokenType: 'Bearer',
-				authState: { email: response.email, username: response.username },
-			})
-			navigate('/')
-		}
+        .then((response) => {
+            return response.json()
+        })
+		.then((data) => {
+            // Sign user in if successfully registered
+            if (data.message === "Registered Successfully") {
+                signIn({
+                    token: data.token,
+                    expiresIn: 1440,
+                    tokenType: 'Bearer',
+                    authState: { email: data.email, username: data.username },
+                })
+                navigate('/', {
+                    state: {
+                        username: data.username,
+                        email: data.email,
+                        balance: data.balance,
+                    },
+                })
+            }
+        })
 	}
 
 	return (
@@ -75,7 +83,7 @@ function Register() {
 						value={email}
 						onChange={(e) => setEmail(e.target.value)}
 						placeholder="Enter Email"
-						pattern="/[\w\.?\W?]+\@[\w]+\.\w+/"
+						//pattern="/[\w\.?\W?]+\@[\w]+\.\w+/"
 						required
 					/>
 				</Form.Group>

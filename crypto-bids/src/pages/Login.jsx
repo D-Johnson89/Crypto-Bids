@@ -57,7 +57,7 @@ function Login() {
                     email: data.email,
                     balance: data.balance,
                 }
-                
+                console.log(member)
                 setUser(member)
             })
             .finally(() => {

@@ -23,17 +23,19 @@ async function setUser (req, res) {
             {
                 userId: newUser._id,
                 username: newUser.username,
-                email: newUser.email, secret
-            }
+                email: newUser.email,
+            },
+            secret,
+            { expiresIn: '24h' },
         )
 
         return res
             .status(201)
-            .json({ message: "Registered Successfully", token: jwtToken, email: newUser.email, username: newUser.username })
+            .json({ message: "Registered Successfully", token: jwtToken, email: newUser.email, username: newUser.username, balance: 0 })
 
     // Catch errors
     } catch (err) {
-        console.error(err)
+        console.error('Error: ', err)
         return res
             .status(409)
             .json({ error: "Email or username already exist" })
