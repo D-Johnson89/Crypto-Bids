@@ -10,20 +10,21 @@ import { useSignOut } from 'react-auth-kit'
 import AuthCard from '../pages/AuthCard'
 
 // Main User Nav Options
-function Dashboard() {
+function Dashboard(user) {
     const signOut = useSignOut()
     const navigate = useNavigate()
+
 
     function logout() {
         signOut()
         navigate('/')
     }
     
-    
+    console.log(user)
     return (
         <Navbar variant="secondary" bg="primary" expand="lg">
             <Container fluid>
-                <Navbar.Brand href="/"><FaHome /></Navbar.Brand>
+                <Navbar.Brand onClick={() => {navigate('/', { state: {username: user.username, email: user.email, balance: user.balance },})}}><FaHome /></Navbar.Brand>
                 <Navbar.Toggle aria-controls="dashboard" />
                 <Navbar.Collapse id="dashboard">
                     <Nav>
@@ -32,35 +33,23 @@ function Dashboard() {
                             title={<FaUserCircle />}
                             menuVariant="info"
                         >
-                            <NavDropdown.Item>
-                                <Link to="/authCard">
-                                    <AuthCard />
-                                </Link>
+                            <NavDropdown.Item onClick={() => { navigate('/authCard')}} >
+                                <AuthCard />
                             </NavDropdown.Item>
-                            <NavDropdown.Item>
-                                <Link to="/addressBook">
-                                    <FaPiggyBank />Withdrawal Address
-                                </Link>
+                            <NavDropdown.Item onClick={() => { navigate('/addressBook')}} >
+                                <FaPiggyBank />Withdrawal Address
                             </NavDropdown.Item>
-                            <NavDropdown.Item>
-                                <Link to="/changePW">
-                                    <FaUserLock />Change Password
-                                </Link>
+                            <NavDropdown.Item onClick={() => { navigate('/changePW')}} >
+                                <FaUserLock />Change Password
                             </NavDropdown.Item>
-                            <NavDropdown.Item>
-                                <Link to="/invitation">
-                                    <FaShare />VIP Level
-                                </Link>
+                            <NavDropdown.Item onClick={() => { navigate('/invitation')}} >
+                                <FaShare />VIP Level
                             </NavDropdown.Item>
-                            <NavDropdown.Item>
-                                <Link to="/aboutUs">
-                                    <FaInfo />About Us
-                                </Link>
+                            <NavDropdown.Item onClick={() => { navigate('/aboutUs')}} >
+                                <FaInfo />About Us
                             </NavDropdown.Item>
-                            <NavDropdown.Item>
-                                <Link to="/deleteAcc">
-                                    <FaTrashAlt />Delete Account
-                                </Link>
+                            <NavDropdown.Item onClick={() => { navigate('/deleteAcc')}} >
+                                <FaTrashAlt />Delete Account
                             </NavDropdown.Item>
                             <NavDropdown.Item>
                                 <Button variant="primary" onClick={() => logout()}>

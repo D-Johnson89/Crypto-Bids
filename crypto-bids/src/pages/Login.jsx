@@ -34,56 +34,57 @@ function Login() {
 				}),
 			})
             .then((response) => {
+                if(response.status != 200 && response.status != 201) {
+                    throw new Error('Login Failed')
+                    console.log(response.status)
+                }
                 return response.json()
             })
 		    .then((data) => {
-                console.log(data)
+                console.log('Data: ', data)
                 // Check for correct email
-                if (data.email === undefined) {
-                    alert('Email not registered!')
                 // Sign in user
-                } else {
+                console.log(data.token)
+                if (data.token) {
                     signIn({
                         token: data.token,
                         expiresIn: 1440,
                         tokenType: 'Bearer',
                         authState: { email: data.email, username: data.username },
                     })
+                    
+                    setUser({
+                        username: data.username,
+                        email: data.email,
+                        balance: data.balance,
+                    })
+
+                    console.log(user)
+                    navigate('/', {
+                        state: {
+                            username: user.username,
+                            email: user.email,
+                            balance: user.balance,
+                        },
+                    })
                 }
+                console.log('User: ', user)
             })
-            .then((data) => {
-                const member = {
-                    username: data.username,
-                    email: data.email,
-                    balance: data.balance,
-                }
-                console.log(member)
-                setUser(member)
-            })
-            .finally(() => {
-                navigate('/', {
-                    state: {
-                        username: user.username,
-                        email: user.email,
-                        balance: user.balance,
-                    },
-                })
-            })
+            
             .catch((err) => {
+                console.log('User: ', user)
                 if (err) setError(err.message)
 
                 console.log("Error: ", error)
             })
             
-
+            console.log(`User: ${user}`)
         // Catch errors
 		} catch (err) {
 			if (err) setError(err.message)
 
 			console.log("Error: ", error)
 		}
-
-		
 	}
 
 	return (

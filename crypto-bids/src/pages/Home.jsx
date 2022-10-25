@@ -7,7 +7,7 @@ import { useIsAuthenticated } from 'react-auth-kit'
 function Home() {
     // Create states and variables
     const location = useLocation()
-    const [user, setUser] = useState('')
+    const [user, setUser] = useState(null)
     const isAuthenticated = useIsAuthenticated()
     //const [loading, setLoading] = useState(false)
     //const [error, setError] = useState(null)
@@ -17,7 +17,7 @@ function Home() {
             const member = {
                 username: location.state.username,
                 email: location.state.email,
-                balance: location.state.email,
+                balance: location.state.balance,
             }
     
             setUser(member)

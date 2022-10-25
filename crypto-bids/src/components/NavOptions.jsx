@@ -9,7 +9,7 @@ function NavOptions(user) {
 	const isAuthenticated = useIsAuthenticated()
     console.log(user)
     
-    return isAuthenticated() ? <Dashboard /> : <LogOptions />
+    return isAuthenticated() ? <Dashboard user={user} /> : <LogOptions />
 }
 
 export default NavOptions
