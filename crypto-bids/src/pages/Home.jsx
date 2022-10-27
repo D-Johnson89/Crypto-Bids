@@ -11,7 +11,7 @@ function Home() {
     const isAuthenticated = useIsAuthenticated()
     //const [loading, setLoading] = useState(false)
     //const [error, setError] = useState(null)
-    
+    console.log(this)
     useEffect(() => {
         if(isAuthenticated()) {
             const member = {
@@ -26,7 +26,7 @@ function Home() {
         }
         
     }, [])
-    console.log(user)
+    //console.log(user)
   return (
     <div>
       <NavOptions user={user} />

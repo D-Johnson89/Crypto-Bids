@@ -4,17 +4,18 @@ import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import NavOptions from '../components/NavOptions'
-import { useAuthHeader } from 'react-auth-kit'
+//import { useAuthHeader } from 'react-auth-kit'
 
 // Main AuthCard Component
-function AuthCard() {
-    const authHeader = useAuthHeader()
+function AuthCard({bool, user}) {
+    const url = window.location.pathname
+    /*const authHeader = useAuthHeader()
     const [error, setError] = useState(null)
     const [isLoading, setLoading] = useState(false)
-    const token = authHeader()
+    const token = authHeader()*/
 
     // Function to fetch data
-    const fillCard = async () => {
+    /*const fillCard = async () => {
         setLoading(true)
         try {
             const response = await fetch('http://localhost:5000/api/authCard', {
@@ -26,12 +27,17 @@ function AuthCard() {
             setError(err)
             console.log('Error: ', error)
         }
-    }
+    }*/
+    
+    if (url =='/authCard') bool = true
 
     return (
         <Container fluid>
+            {bool == true
+            ? <>
             <NavOptions />
             <h1>Personal Information</h1>
+            </> : <></>}
             <Stack gap={3}>
                 <div>
                     <Row>

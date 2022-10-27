@@ -24,15 +24,6 @@ router.use((req, res, next) => {
     }
 })
 
-// Check for authentication
-const authenticated = (req, res, next) => {
-    if (!req.username) {
-        res.status(403).json({ message: 'User not authenticated' })
-    } else {
-        next()
-    }
-}
-
 // Unsecure routes
 router.post('/register', userCtrl.setUser)
 router.post('/login', userCtrl.getUser)

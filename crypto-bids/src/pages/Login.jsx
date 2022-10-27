@@ -12,7 +12,6 @@ function Login() {
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
 	const [error, setError] = useState(null)
-    const [user, setUser] = useState(null)
 	const signIn = useSignIn()
 	const navigate = useNavigate()
 
@@ -41,44 +40,32 @@ function Login() {
                 return response.json()
             })
 		    .then((data) => {
-                console.log('Data: ', data)
-                // Check for correct email
-                // Sign in user
-                console.log(data.token)
+                // Check for data.token
                 if (data.token) {
+                    // Sign in user
                     signIn({
                         token: data.token,
                         expiresIn: 1440,
                         tokenType: 'Bearer',
                         authState: { email: data.email, username: data.username },
                     })
-                    
-                    setUser({
-                        username: data.username,
-                        email: data.email,
-                        balance: data.balance,
-                    })
-
-                    console.log(user)
+                    // Navigate to home with user data
                     navigate('/', {
                         state: {
-                            username: user.username,
-                            email: user.email,
-                            balance: user.balance,
+                            username: data.username,
+                            email: data.email,
+                            balance: data.balance,
                         },
                     })
                 }
-                console.log('User: ', user)
+                
             })
-            
             .catch((err) => {
-                console.log('User: ', user)
                 if (err) setError(err.message)
 
                 console.log("Error: ", error)
             })
-            
-            console.log(`User: ${user}`)
+    
         // Catch errors
 		} catch (err) {
 			if (err) setError(err.message)

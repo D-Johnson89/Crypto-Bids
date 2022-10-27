@@ -11,6 +11,7 @@ import AuthCard from '../pages/AuthCard'
 
 // Main User Nav Options
 function Dashboard(user) {
+    user = user.user
     const signOut = useSignOut()
     const navigate = useNavigate()
 
@@ -34,7 +35,7 @@ function Dashboard(user) {
                             menuVariant="info"
                         >
                             <NavDropdown.Item onClick={() => { navigate('/authCard')}} >
-                                <AuthCard />
+                                <AuthCard bool={false} />
                             </NavDropdown.Item>
                             <NavDropdown.Item onClick={() => { navigate('/addressBook')}} >
                                 <FaPiggyBank />Withdrawal Address
