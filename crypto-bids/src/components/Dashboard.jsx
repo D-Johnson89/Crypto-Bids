@@ -6,19 +6,21 @@ import Navbar from 'react-bootstrap/Navbar'
 import NavDropdown from 'react-bootstrap/NavDropdown'
 import Container from 'react-bootstrap/Container'
 import Button from 'react-bootstrap/Button'
-import { useSignOut } from 'react-auth-kit'
 import AuthCard from '../pages/AuthCard'
 
 // Main User Nav Options
 function Dashboard(user) {
     user = user.user
-    const signOut = useSignOut()
     const navigate = useNavigate()
 
 
     function logout() {
-        signOut()
-        navigate('/')
+        user = null
+        navigate('/'< {
+            state: {
+                user
+            },
+        })
     }
     
     console.log(user)

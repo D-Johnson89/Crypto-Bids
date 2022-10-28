@@ -1,16 +1,20 @@
 import React, { useState } from 'react'
 import LogOptions from './LogOptions'
 import Dashboard from './Dashboard'
-import { useIsAuthenticated } from 'react-auth-kit'
+
 
 
 // Function to check if Logged In, Determines Nav Option to use
 function NavOptions(user) {
-	const isAuthenticated = useIsAuthenticated()
-
-    if(isAuthenticated) user = user.user
+	function useAuth() {
+        if (user != null) {
+            return true
+        }
+        
+        return false
+    }
     
-    return isAuthenticated() ? <Dashboard user={user} /> : <LogOptions />
+    return !useAuth || {user} == null ? <LogOptions /> : <Dashboard user={user} />
 }
 
 export default NavOptions

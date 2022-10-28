@@ -35,7 +35,6 @@ function AuthCard({bool, user}) {
         <Container fluid>
             {bool == true
             ? <>
-            <NavOptions />
             <h1>Personal Information</h1>
             </> : <></>}
             <Stack gap={3}>
