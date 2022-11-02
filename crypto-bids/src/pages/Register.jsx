@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import { useSignIn } from 'react-auth-kit'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
+import { registerUser } from '../util/userFuncs'
 
 // Main Register function
 function Register() {

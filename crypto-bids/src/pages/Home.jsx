@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
+import { useIsAuthenticated } from 'react-auth-kit'
 
 // Home Page Component
 function Home() {
     // Create states and variables
     const location = useLocation()
-    const [user, setUser] = useState(null)
+    //const [user, setUser] = useState(null)
+    const isAuthenticated = useIsAuthenticated()
     
-    useEffect(() => {
+    /*useEffect(() => {
         if(isAuthenticated()) {
             const member = {
                 username: location.state.username,
@@ -20,7 +22,7 @@ function Home() {
             setUser(null)
         }
         
-    }, [])
+    }, [])*/
     //console.log(user)
   return (
     <div>

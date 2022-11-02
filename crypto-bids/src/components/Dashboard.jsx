@@ -1,33 +1,29 @@
 import React from 'react'
-import { useNavigate, Link } from 'react-router-dom'
-import { FaUserCircle, FaPiggyBank, FaUserLock, FaShare, FaInfo, FaSignOutAlt, FaTrashAlt, FaHome } from 'react-icons/fa'
+import { useNavigate } from 'react-router-dom'
+import { FaUserCircle, FaPiggyBank, FaUserLock, FaInfo, FaSignOutAlt, FaTrashAlt, FaHome } from 'react-icons/fa'
 import Nav from 'react-bootstrap/Nav'
 import Navbar from 'react-bootstrap/Navbar'
 import NavDropdown from 'react-bootstrap/NavDropdown'
 import Container from 'react-bootstrap/Container'
 import Button from 'react-bootstrap/Button'
 import AuthCard from '../pages/AuthCard'
+import { useSignOut } from 'react-auth-kit'
 
 // Main User Nav Options
-function Dashboard(user) {
-    user = user.user
+function Dashboard() {
+    const signOut = useSignOut()
     const navigate = useNavigate()
 
 
     function logout() {
-        user = null
-        navigate('/'< {
-            state: {
-                user
-            },
-        })
+        signOut()
+        navigate('/')
     }
     
-    console.log(user)
     return (
         <Navbar variant="secondary" bg="primary" expand="lg">
             <Container fluid>
-                <Navbar.Brand onClick={() => {navigate('/', { state: {username: user.username, email: user.email, balance: user.balance },})}}><FaHome /></Navbar.Brand>
+                <Navbar.Brand onClick={() => {navigate('/')}}><FaHome /></Navbar.Brand>
                 <Navbar.Toggle aria-controls="dashboard" />
                 <Navbar.Collapse id="dashboard">
                     <Nav>
@@ -45,9 +41,9 @@ function Dashboard(user) {
                             <NavDropdown.Item onClick={() => { navigate('/changePW')}} >
                                 <FaUserLock />Change Password
                             </NavDropdown.Item>
-                            <NavDropdown.Item onClick={() => { navigate('/invitation')}} >
+                            {/*<NavDropdown.Item onClick={() => { navigate('/invitation')}} >
                                 <FaShare />VIP Level
-                            </NavDropdown.Item>
+                            </NavDropdown.Item>*/}
                             <NavDropdown.Item onClick={() => { navigate('/aboutUs')}} >
                                 <FaInfo />About Us
                             </NavDropdown.Item>

@@ -3,11 +3,9 @@ import Stack from 'react-bootstrap/Stack'
 import Container from 'react-bootstrap/Container'
 import NavOptions from '../components/NavOptions'
 
-
 function AboutUs() {
     return (
         <Container fluid>
-            <NavOptions />
             <h1>About Us</h1>
             <Stack gap={3}>
                 <div className="bg-light border">

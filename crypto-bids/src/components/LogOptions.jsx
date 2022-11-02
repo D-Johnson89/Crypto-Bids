@@ -1,11 +1,10 @@
 import React from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { FaHome, FaUserCircle, FaUserCheck, FaUserPlus, FaInfo } from 'react-icons/fa'
 import Container from 'react-bootstrap/Container'
 import Nav from 'react-bootstrap/Nav'
 import Navbar from 'react-bootstrap/Navbar'
 import NavDropdown from 'react-bootstrap/NavDropdown'
-import { useAuthUser } from 'react-auth-kit'
 
 function LogOptions() {
     const navigate = useNavigate()
@@ -21,10 +20,10 @@ function LogOptions() {
 							title={<FaUserCircle/>}
 							menuVariant="info"
 						>
-							<NavDropdown.Item onClick={() => { navigate('/login')}} >
+							<NavDropdown.Item onClick={() => { navigate('/users/login')}} >
 								<FaUserCheck />Login
 							</NavDropdown.Item>
-							<NavDropdown.Item onClick={() => { navigate('/register')}} >
+							<NavDropdown.Item onClick={() => { navigate('/users/register')}} >
 								<FaUserPlus />Register
 							</NavDropdown.Item>
                             <NavDropdown.Item onClick={() => { navigate('/aboutus')}} >
