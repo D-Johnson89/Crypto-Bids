@@ -31,7 +31,7 @@ async function setUser (req, res) {
 
         return res
             .status(201)
-            .json({ message: "Registered Successfully", token: jwtToken, email: newUser.email, username: newUser.username, balance: newUser.tetherBal })
+            .json({ message: "Registered Successfully", token: jwtToken, user: newUser })
 
     // Catch errors
     } catch (err) {
@@ -86,7 +86,7 @@ async function getUser(req, res) {
         console.log(jwtToken)
         return res
             .status(200)
-            .json({ message: 'Welcome Back!', token: jwtToken, email: email, username: user.username, balance: user.tetherBal })
+            .json({ message: 'Welcome Back!', token: jwtToken, user: user })
         
     // Catch Errors
     } catch (err) {

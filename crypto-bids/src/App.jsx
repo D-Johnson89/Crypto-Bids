@@ -1,7 +1,6 @@
 import React from 'react'
 import { Suspense } from 'react'
 import { useRoutes } from 'react-router'
-//import { Routes, Route } from 'react-router-dom'
 import Home from './pages/Home'
 import Register from './pages/Register'
 import Login from './pages/Login'

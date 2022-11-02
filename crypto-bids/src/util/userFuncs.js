@@ -1,19 +1,16 @@
 import { createContext } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useSignIn, useSignOut } from 'react-auth-kit'
+import { resolvePath } from 'react-router-dom'
 
-const navigate = useNavigate()
-const signIn = useSignIn()
-const signOut = useSignOut()
+export const UserContext = createContext(null)
 
 // Function to register user
-export async function registerUser(e, username, email, pw, conf) {
+export async function registerUser(e, username, email, password, confirmation) {
 
     // Prevent default page refresh
     e.preventDefault()
 
     // Check passwords match
-    if (pw === conf) {
+    if (password === confirmation) {
         try {
             const response = await fetch('http://localhost:5000/api/users/register', {
 			method: "POST",
@@ -31,20 +28,12 @@ export async function registerUser(e, username, email, pw, conf) {
             return response.json()
         })
         .then((data) => {
+            console.log(data.token)
             if (data.message === "Registered Successfully") {
-                signIn({
-                    token: data.token,
-                    expiresIn: 1440,
-                    tokenType: 'Bearer',
-                    authState: { email: data.email, username: data.username },
-                })
-                navigate('/', {
-                    state: {
-                        username: data.username,
-                        email: data.email,
-                        balance: data.balance,
-                    },
-                })
+                return data
+            } else {
+                alert('Email or Username already exist')
+                return null
             }
         })
         } catch (err) {
