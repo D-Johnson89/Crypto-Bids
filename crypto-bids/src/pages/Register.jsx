@@ -33,7 +33,7 @@ function Register() {
 			<h1>Register for a <Link to="/">Crypto-Bids</Link> Account</h1>
 			<Form onSubmit={e => {
                 const data = registerUser(e, username, email, password, confirmation)
-                console.log(data)
+                console.log('Register: ', data)
             }}>
 				<Form.Group className="mb-3" controlId="formGroupUsername">
 					<Form.Label>Choose a Username</Form.Label>

@@ -1,5 +1,5 @@
 import { createContext } from 'react'
-import { resolvePath } from 'react-router-dom'
+//import { resolvePath } from 'react-router-dom'
 
 export const UserContext = createContext(null)
 
@@ -21,7 +21,6 @@ export async function registerUser(e, username, email, password, confirmation) {
 				username,
 				email,
 				password,
-				confirmation,
 			}),
 		})
         .then((response) => {
@@ -30,6 +29,7 @@ export async function registerUser(e, username, email, password, confirmation) {
         .then((data) => {
             console.log(data.token)
             if (data.message === "Registered Successfully") {
+                console.log('userFuncs: ', data)
                 return data
             } else {
                 alert('Email or Username already exist')

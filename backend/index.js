@@ -6,7 +6,8 @@ const port = process.env.PORT || 5000
 
 // Execute database
 const mongoose = require('mongoose')
-mongoose.connect("mongodb+srv://djohnson3009:Fy6bCReTINpXOKjc@users.xbb0hed.mongodb.net/test")
+const db = mongoose.connect("mongodb+srv://djohnson3009:Fy6bCReTINpXOKjc@users.xbb0hed.mongodb.net/test")
+
 const app = express()
 const cors = require('cors')
 
