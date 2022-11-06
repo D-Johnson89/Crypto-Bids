@@ -1,94 +1,26 @@
-import React, { useState, useEffect } from 'react'
+import React, { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Container from 'react-bootstrap/Container'
 import Card from 'react-bootstrap/Card'
 import Stack from 'react-bootstrap/Stack'
 import Button from 'react-bootstrap/Button'
-import NavOptions from '../components/NavOptions'
 import { FaPlus } from 'react-icons/fa'
+import { UserContext, deleteAddress } from '../util/userFuncs'
 import { useAuthHeader } from 'react-auth-kit'
 
 // Main AddressBook Component
 function AddressBook() {
     const navigate = useNavigate()
     const authHeader = useAuthHeader()
-    const [error, setError] = useState(null)
-    const [addresses, setAddresses] = useState([])
-    const [isLoading, setLoading] = useState(false)
-    const token = authHeader()
+    const token = authHeader().split(' ')[1]
+    const user = useContext(UserContext)
+    let wdAddresses = user.addresses
+    const [addresses, setAddresses] = useState(wdAddresses)
 
-    // Fetch data from server
-    const fetchAddresses = async () => {
-        setLoading(true)
-        try {
-
-            const response = await fetch('http://localhost:5000/api/addressBook', {
-                headers: {
-                    Authentication: `${token}`
-                }
-            })
-            .then((response) => {
-                return response.json()
-            })
-            .then((data) => {
-                const array = data['addresses']
-                array.length < 1 ? setAddresses(['No Saved Addresses']) : setAddresses(array)
-                setLoading(false)
-            })
-            
-        } catch (err) {
-            setError(err)
-            console.log('Error: ', error)
-        }
-        
-    }
-
-    useEffect(() => {
-        fetchAddresses()
-    }, [])
-
-    function deleteAddress(item) {
-        const confirmBox = window.confirm(
-            'Do you really want to delete this address?'
-        )
-
-        const doDelete = async () => {
-            try {
-                //console.log(confirmBox, item)
-                const response = await fetch(`http://localhost:5000/api/addressBook/`, {
-                    method: "DELETE",
-                    headers: {
-                        Authentication: `${token}`,
-                        AddressId: `${item}`,
-                    }
-                })
-                .then((response) => {
-                    return response.json()
-                })
-                .then((data) => {
-                    data.message ? fetchAddresses() : alert(data.message)
-                })
-            } catch (err) {
-                setError(err)
-                console.log(error)
-            }
-        }
-
-        if (confirmBox) {
-            doDelete()
-        }
-    }
-
-    const NoAddress = () => {
-        return (<div>
-            <h3>No Saved Addresses</h3>
-        </div>)
-    }
+    
 
     return (
-        isLoading ? <div>Loading...</div> :
         <Container fluid>
-            <NavOptions />
             <h1>Withdrawal Addresses</h1>
             <Container>
             <Stack gap={3}>
@@ -97,10 +29,10 @@ function AddressBook() {
                         <FaPlus />Address
                     </Button>
                 </div>
-                {addresses == 'No Saved Addresses' ?
-                <NoAddress /> :
+                {addresses.length == 0 ?
+                <h3>No Saved Addresses</h3> :
                     addresses.map((address) => (
-                    <div key={address._id}>
+                    <div key={address.id}>
                         <Card className='text-center'>
                     <Card.Header><h4>{address.institute}</h4></Card.Header>
                     <Card.Body>
@@ -110,7 +42,10 @@ function AddressBook() {
                     <Card.Footer>
                         <Button
                             variant='primary'
-                            onClick={() => deleteAddress(address._id)}
+                            onClick={() => {
+                                deleteAddress(user, token, address.id)
+                                setAddresses(user.addresses)
+                            }}
                         >
                             Delete
                         </Button>

@@ -12,9 +12,9 @@ router.use((req, res, next) => {
             if (error) next(error)
             else {
                 // Token is verified
-                req.username = decoded.username
-                req._id = decoded._id
-                req.email = decoded.email
+                req.username = decode.username
+                req._id = decode._id
+                req.email = decode.email
                 // Next controller function
                 next()
             }
@@ -30,7 +30,8 @@ router.post('/login', userCtrl.getUser)
 
 
 // Secure routes
-//router.get('/authCard', userCtrl.getCard)
+router.post('/addAddress', userCtrl.addAddress)
+router.delete('/addressBook', userCtrl.deleteAddress)
 /*
     @AuthCard
     @ChangePW

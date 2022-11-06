@@ -3,8 +3,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import { useSignIn } from 'react-auth-kit'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
-
-//import Alert from "react-bootstrap/Alert"
+import { loginUser} from '../util/userFuncs'
 
 // Main Login function
 function Login() {
@@ -16,68 +15,34 @@ function Login() {
 	const navigate = useNavigate()
 
 	// Function to log user in
-	async function loginUser(e) {
-		// Prevent default page refresh
-		e.preventDefault()
+	function submitForm(e) {
+        // Prevent default page refresh
+        e.preventDefault()
 
-		// Send data to server to try to login
-		try {
-			const response = await fetch('http://localhost:5000/api/users/login', {
-				method: "POST",
-				headers: {
-					"Content-Type" : "application/json",
-				},
-				body: JSON.stringify({
-					email,
-					password,
-				}),
-			})
-            .then((response) => {
-                if(response.status != 200 && response.status != 201) {
-                    throw new Error('Login Failed')
-                    console.log(response.status)
-                }
-                return response.json()
-            })
-		    .then((data) => {
-                // Check for data.token
-                if (data.token) {
-                    // Sign in user
-                    signIn({
-                        token: data.token,
-                        expiresIn: 1440,
-                        tokenType: 'Bearer',
-                        authState: { email: data.email, username: data.username },
-                    })
-                    // Navigate to home with user data
-                    navigate('/', {
-                        state: {
-                            username: data.username,
-                            email: data.email,
-                            balance: data.balance,
-                        },
-                    })
-                }
+        const promise = loginUser(email, password)
+        promise.then((data) => {
+            if (data.token) {
                 
-            })
-            .catch((err) => {
-                if (err) setError(err.message)
-
-                console.log("Error: ", error)
-            })
-    
-        // Catch errors
-		} catch (err) {
-			if (err) setError(err.message)
-
-			console.log("Error: ", error)
-		}
-	}
+                signIn({
+                    token: data.token,
+                    expiresIn: 1440,
+                    tokenType: 'Bearer',
+                    authState: { user: data.user},
+                })
+                // Navigate to home with user data
+                navigate('/')
+            } else {
+                alert('Email or password incorrect!')
+            }
+        })
+    }
 
 	return (
 		<div className="mx-auto">
 			<h1>Login</h1>
-			<Form onSubmit={loginUser}>
+			<Form onSubmit={(e) => {
+                submitForm(e)
+            }}>
 				<Form.Group className="mb-3"
 				controlId="formGroupEmail">
 					<Form.Label>User Email</Form.Label>
@@ -108,7 +73,7 @@ function Login() {
 					Login
 				</Button>
 			</Form>
-			<p className="my-3">Not a member?  Register <Link to='/register'>here</Link>.</p>
+			<p className="my-3">Not a member?  Register <Link to='users/register'>here</Link>.</p>
 		</div>
 	)
 }

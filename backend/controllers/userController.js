@@ -3,6 +3,7 @@ const User = require('../models/user.model')
 const jwt = require('jsonwebtoken')
 const secret = process.env.SECRET || 'MY_S3CR3T_K3Y'
 
+
 /*
   @ desc Creates User
   @ route POST api/register
@@ -28,19 +29,30 @@ async function setUser (req, res) {
             secret,
             { expiresIn: '24h' },
         )
+        
+        const user = {
+            username: newUser.username,
+            email: newUser.email,
+            balances: {fiat: newUser.fiatBal, tether: newUser.tetherBal},
+            invites: newUser.invites,
+            addresses: [],
+            bids: [],
+            transactions: [],
+        }
 
         return res
             .status(201)
-            .json({ message: "Registered Successfully", token: jwtToken, user: newUser })
+            .json({ message: "Registered Successfully", token: jwtToken, user: user })
 
     // Catch errors
     } catch (err) {
         console.error('Error: ', err)
         return res
             .status(409)
-            .json({ error: "Email or username already exist" })
+            .json({ error: 'Duplicate key', message: "Email or username already exist" })
     }
 }
+
 
 /*
   @ desc Get User
@@ -55,7 +67,7 @@ async function getUser(req, res) {
     // Try to find user data
     try {
         // Create user variable if user found
-        const user = await User.findOne({ email }).catch(
+        const member = await User.findOne({ email }).catch(
             (err) => {
                 console.error(err)
                 return res
@@ -64,9 +76,8 @@ async function getUser(req, res) {
             }
         )
 
-        console.log(user)
         // Check password
-        if(!bcrypt.compareSync(password, user.hash)) {
+        if(!bcrypt.compareSync(password, member.hash)) {
             return res
                 .status(400)
                 .json({ message: 'Email or password does not match', user: false })
@@ -75,15 +86,24 @@ async function getUser(req, res) {
         // Create token for user
         const jwtToken = jwt.sign(
             {
-                userId: user._id,
-                username: user.username,
-                email: user.email,
+                userId: member._id,
+                username: member.username,
+                email: member.email,
             },
             secret,
             { expiresIn: '24h' },
         )
+        
+        const user = {
+            username: member.username,
+            email: member.email,
+            balances: [member.fiatBal, member.tetherBal],
+            invites: member.invites,
+            addresses: [],
+            bids: [],
+            transactions: [],
+        }
 
-        console.log(jwtToken)
         return res
             .status(200)
             .json({ message: 'Welcome Back!', token: jwtToken, user: user })
@@ -97,14 +117,68 @@ async function getUser(req, res) {
     }
 }
 
+
 /*
-  @ desc Get UserCard
-  @ route GET api/authCard
+  @ desc Add Withdrawal Address
+  @ route POSR api/users/addAddress
   @ params (req, res)
-  @ returns {Promis<void>}
+  @ returns {Promise<void>}
 */
-async function getCard(req, res) {
-    // Create variable from req data
+async function addAddress(req, res) {
+    // Create variables from req data
+    const { id, institute, address } = req.body
+    const wdAddress = {
+        id: id,
+        institute: institute,
+        address: address,
+        withdrawn: 0,
+    }
+
+    // Get user email
+    const token = req.headers.authentication
+    const email = jwt.verify(token, secret).email
+
+    try {
+        await User.findOneAndUpdate({ email }, { $push: { addresses: wdAddress } })
+
+        return res
+            .status(201)
+            .json({ message: 'Address Saved', wdAddress: wdAddress })
+    } catch (err) {
+        return res
+            .status(400)
+            .json({ message: 'Address not saved' })
+    }
+}
+
+
+
+/*
+  @ desc Delete Withdrawal Address
+  @ route POST api/users/addressBook
+  @ params (req, res)
+  @ returns {Promise<void>}
+*/
+async function deleteAddress(req, res) {
+    // Create variables from req data
+    const token = req.headers.authentication
+    const address = req.headers.addressid
+    const email = jwt.verify(token, secret).email
+
+
+    try {
+        await User.updateOne(
+            { email: email }, { $pull: { addresses: { id: address }}}
+        )
+
+        return res
+            .status(201)
+            .json({ message: 'Address deleted' })
+    } catch (err) {
+        return res
+            .status(400)
+            .json({ message: 'Something went wrong!' })
+    }
 }
 
 // @desc Update User
@@ -124,6 +198,7 @@ const deleteUser = (req, res) => {
 module.exports = {
     getUser,
     setUser,
-    //updateUser,
+    addAddress,
+    deleteAddress,
     deleteUser
 }

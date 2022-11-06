@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import LogOptions from './LogOptions'
 import Dashboard from './Dashboard'
 import { Outlet } from 'react-router-dom'
@@ -11,13 +11,12 @@ import { UserContext } from '../util/userFuncs'
 function NavOptions() {
     const isAuthenticated = useIsAuthenticated()
     const auth = useAuthUser()
-    const user = useContext(UserContext)
 	
     
     return (
         <>
             {!isAuthenticated() ? <LogOptions /> : <Dashboard />}
-            <UserContext.Provider value={user} >
+            <UserContext.Provider value={isAuthenticated() ? auth().user : null} >
                 <Outlet/>
             </UserContext.Provider>
         </>

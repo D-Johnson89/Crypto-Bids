@@ -15,7 +15,31 @@ function Register() {
 	const navigate = useNavigate()
 	const signIn = useSignIn()
 
-    function logIn() {
+    // Submit form function
+    function submitForm(e) {
+
+        // Prevent default page refresh
+        e.preventDefault()
+
+        if (password == confirmation) {
+            const promise = registerUser(username, email, password)
+            promise.then((data) => {
+                console.log(data)
+                if (data.message == "Registered Successfully") {
+                    signIn({
+                        token: data.token,
+                        expiresIn: 1440,
+                        tokenType: 'Bearer',
+                        authState: { user: data.user },
+                    })
+                    navigate('/')
+                } else {
+                    alert('Email or username already exists')
+                }
+            })
+        } else {
+            alert('Confirmation must match password')
+        }
         
         
         /*console.log(`Token: ${token}, User: ${user}`)
@@ -31,9 +55,8 @@ function Register() {
 	return (
 		<div className="mx-auto">
 			<h1>Register for a <Link to="/">Crypto-Bids</Link> Account</h1>
-			<Form onSubmit={e => {
-                const data = registerUser(e, username, email, password, confirmation)
-                console.log('Register: ', data)
+			<Form onSubmit={(e) => {
+                submitForm(e)
             }}>
 				<Form.Group className="mb-3" controlId="formGroupUsername">
 					<Form.Label>Choose a Username</Form.Label>

@@ -1,57 +1,48 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import Container from 'react-bootstrap/Container'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
-import NavOptions from '../components/NavOptions'
 import { useNavigate } from 'react-router-dom'
 import { useAuthHeader } from 'react-auth-kit'
+import { UserContext, saveAddress } from '../util/userFuncs'
 
 // Main AddAddress function
 function AddAddress() {
     // Set states
     const [institute, setInstitute] = useState('')
     const [address, setAddress] = useState('')
-    const [error, setError] = useState(null)
-    const navigate = useNavigate()
     const authHeader = useAuthHeader()
-    const token = authHeader()
+    const token = authHeader().split(' ')[1]
+    const navigate = useNavigate()
+    const user = useContext(UserContext)
+    const id = user.addresses.length ? user.addresses.length : 0
 
     // onSubmit function for saving adresses
-    async function saveAddress(e) {
-        // Prevent default page refresh
+    function submitForm(e) {
+        // Prevent Default page refresh
         e.preventDefault()
 
-        try {
-            const response = await fetch('http://localhost:5000/api/addAddress', {
-                method: "POST",
-                headers: {
-                    Authentication: `${token}`,
-                    "Content-Type" : "application/json",
-                },
-                body: JSON.stringify({
-                    institute,
-                    address,
-                }),
-            })
-            .then((response) => {
-                return response.json()
-            })
-            .then(
+        const promise = saveAddress(token, id, institute, address)
+        
+        promise.then((data) => {
+            if (data.message == 'Address Saved') {
+                const wdAddress = data.wdAddress
+                user.addresses.push(wdAddress)
                 navigate('/addressBook')
-            )
-        } catch (err) {
-            if (err) setError(err.message)
-            console.log('Error: ', error)
-        }
+            } else {
+                alert('Address not saved!')
+            }
+        })
     }
 
     return (
         <Container fluid>
-            <NavOptions />
             <div className='mx-auto'>
                 <h1>Add Withdrawal Address</h1>
                 <p>**You may only have 5 addresses saved at a time**</p>
-                <Form onSubmit={saveAddress}>
+                <Form onSubmit={(e) => {
+                    submitForm(e)
+                }}>
                     <Form.Group className='mb-3'
                     controlId='formGroupInstitute'>
                         <Form.Label>Institute Name</Form.Label>
