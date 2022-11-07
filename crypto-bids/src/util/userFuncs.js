@@ -110,6 +110,7 @@ export function deleteAddress(user, token, item) {
             })
         } catch (err) {
             console.log(err)
+            err
         }
     }
 

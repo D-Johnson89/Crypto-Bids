@@ -16,6 +16,7 @@ function AddressBook() {
     const user = useContext(UserContext)
     let wdAddresses = user.addresses
     const [addresses, setAddresses] = useState(wdAddresses)
+    console.log(addresses)
 
     
 
@@ -44,7 +45,13 @@ function AddressBook() {
                             variant='primary'
                             onClick={() => {
                                 deleteAddress(user, token, address.id)
-                                setAddresses(user.addresses)
+                                setAddresses(
+                                    addresses.filter(
+                                        (a) => {
+                                            a.id !== addresses.id
+                                        }
+                                    )
+                                )
                             }}
                         >
                             Delete
