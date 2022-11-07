@@ -14,9 +14,10 @@ function AddressBook() {
     const authHeader = useAuthHeader()
     const token = authHeader().split(' ')[1]
     const user = useContext(UserContext)
+    console.log(user)
     let wdAddresses = user.addresses
     const [addresses, setAddresses] = useState(wdAddresses)
-    console.log(addresses)
+    
 
     
 
