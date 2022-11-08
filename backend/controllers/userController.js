@@ -97,11 +97,11 @@ async function getUser(req, res) {
         const user = {
             username: member.username,
             email: member.email,
-            balances: [member.fiatBal, member.tetherBal],
+            balances: {fiat: newUser.fiatBal, tether: newUser.tetherBal},
             invites: member.invites,
-            addresses: [],
-            bids: [],
-            transactions: [],
+            addresses: member.addresses,
+            bids: member.bids ? member.bids : [],
+            transactions: member.transactions ? member.transactions : [],
         }
 
         return res
@@ -184,8 +184,36 @@ async function deleteAddress(req, res) {
 // @desc Update User
 // @route PUT api/login/:id
 // @ access Private
-const changePW = (req, res) => {
-    res.status(200).json({ message: `Update User ${req.params.id}` })
+async function changePW(req, res) {
+    // Create variables from req data
+    const { oldPW, newPW } = req.body
+
+    const token = req.headers.authentication
+    const email = jwt.verify(token, secret).email
+
+    try {
+        const member = await User.findOne({ email })
+
+        if(!bcrypt.compareSync(oldPW, member.hash)) {
+            return res
+                .status(400)
+                .json({ message: 'Failed to change password!' })
+        } else {
+
+            member.hash = bcrypt.hashSync(newPW, 10)
+
+            await member.save()
+
+            return res
+                .status(201)
+                .json({ message: 'Password Changed' })
+        }
+        
+    } catch {
+        return res
+            .status(400)
+            .json({ message: 'Failed to change password!' })
+    }
 }
 
 // @desc Delete User
@@ -200,5 +228,6 @@ module.exports = {
     setUser,
     addAddress,
     deleteAddress,
+    changePW,
     deleteUser
 }

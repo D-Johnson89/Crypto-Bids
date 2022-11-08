@@ -97,7 +97,8 @@ function Register() {
 						letter,<br></br> 2 numbers, and 2 special characters
 					</Form.Text>
 				</Form.Group>
-				<Form.Group className="mb-3">
+				<Form.Group className="mb-3"
+                controlId="formGroupConfirmation">
 					<Form.Label>Confirm Password</Form.Label>
 					<Form.Control
 						className="form-control mx-auto w-auto"

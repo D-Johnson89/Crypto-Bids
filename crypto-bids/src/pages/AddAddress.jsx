@@ -11,10 +11,11 @@ function AddAddress() {
     // Set states
     const [institute, setInstitute] = useState('')
     const [address, setAddress] = useState('')
+    const user = useContext(UserContext)
+
+    const navigate = useNavigate()
     const authHeader = useAuthHeader()
     const token = authHeader().split(' ')[1]
-    const navigate = useNavigate()
-    const user = useContext(UserContext)
     const id = user.addresses.length ? user.addresses.length : 0
 
     // onSubmit function for saving adresses

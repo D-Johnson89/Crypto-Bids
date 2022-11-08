@@ -32,6 +32,7 @@ router.post('/login', userCtrl.getUser)
 // Secure routes
 router.post('/addAddress', userCtrl.addAddress)
 router.delete('/addressBook', userCtrl.deleteAddress)
+router.put('/changePW', userCtrl.changePW)
 /*
     @AuthCard
     @ChangePW

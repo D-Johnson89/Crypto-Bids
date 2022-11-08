@@ -117,3 +117,26 @@ export function deleteAddress(user, token, item) {
         doDelete()
     }
 }
+
+
+// Function to change password
+export function changePW(token, oldPW, newPW) {
+    return fetch('http://localhost:5000/api/users/changePW', {
+        method: "PUT",
+        headers: {
+            Authentication: `${token}`,
+            "Content-Type" : "application/json",
+        },
+        body: JSON.stringify({
+            oldPW,
+            newPW,
+        }),
+    })
+    .then((response) => {
+        return response.json()
+    })
+    .catch((err) => {
+        console.log('Error: ', err)
+        return 'Password change unsuccessful'
+    })
+}
