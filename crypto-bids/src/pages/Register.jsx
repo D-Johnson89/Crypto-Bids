@@ -41,15 +41,6 @@ function Register() {
             alert('Confirmation must match password')
         }
         
-        
-        /*console.log(`Token: ${token}, User: ${user}`)
-        signIn({
-            token: token,
-            expiresIn: 1440,
-            tokenType: 'Bearer',
-            authState: { email: user.email, username: user.username },
-        })
-        navigate('/')*/
     }
 
 	return (
