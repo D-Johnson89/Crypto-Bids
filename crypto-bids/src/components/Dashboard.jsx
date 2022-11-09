@@ -18,7 +18,6 @@ function Dashboard() {
     const navigate = useNavigate()
     const auth = useAuthUser()
     const user = auth().user
-    console.log(user)
 
 
     function logout() {

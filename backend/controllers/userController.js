@@ -31,9 +31,10 @@ async function setUser (req, res) {
         )
         
         const user = {
+            environment: newUser.environment,
             username: newUser.username,
             email: newUser.email,
-            balances: {fiat: newUser.fiatBal, tether: newUser.tetherBal},
+            balances: {tether: newUser.testBal},
             invites: newUser.invites,
             addresses: [],
             bids: [],
@@ -95,9 +96,10 @@ async function getUser(req, res) {
         )
         
         const user = {
+            environment: member.environment,
             username: member.username,
             email: member.email,
-            balances: {fiat: newUser.fiatBal, tether: newUser.tetherBal},
+            balances: member.envorment == 'practice' ? {tether: member.testBal} : {fiat: member.fiatBal, tether: member.tetherBal},
             invites: member.invites,
             addresses: member.addresses,
             bids: member.bids ? member.bids : [],
@@ -219,8 +221,28 @@ async function changePW(req, res) {
 // @desc Delete User
 // @route DeLETE api/login/:id
 // @ access Private
-const deleteUser = (req, res) => {
-    res.status(200).json({ message: `Delete User ${req.params.id}` })
+async function deleteAcc(req, res) {
+    const token = req.headers.authentication
+    const {password} = req.body
+    const email = jwt.verify(token, secret).email
+    try {
+        const member = await User.findOne({ email })
+
+        if(!bcrypt.compareSync(password, member.hash)) {
+            return res
+                .status(400)
+                .json({ message: 'Incorrect Password'})
+        }
+        await member.deleteOne({ email: { email } })
+
+        return res
+            .status(201)
+            .json({ message: 'Account deleted' })
+    } catch {
+        return res
+            .status(400)
+            .json({ message: 'Failed to delete account' })
+    }
 }
 
 module.exports = {
@@ -229,5 +251,5 @@ module.exports = {
     addAddress,
     deleteAddress,
     changePW,
-    deleteUser
+    deleteAcc
 }

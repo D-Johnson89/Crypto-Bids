@@ -1,9 +1,9 @@
-import React, { useState, useContext } from 'react'
+import React, { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useSignIn } from 'react-auth-kit'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
-import { registerUser, UserContext } from '../util/userFuncs'
+import { registerUser } from '../util/userFuncs'
 
 // Main Register function
 function Register() {
@@ -24,7 +24,6 @@ function Register() {
         if (password == confirmation) {
             const promise = registerUser(username, email, password)
             promise.then((data) => {
-                console.log(data)
                 if (data.message == "Registered Successfully") {
                     signIn({
                         token: data.token,
