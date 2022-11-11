@@ -34,7 +34,7 @@ async function setUser (req, res) {
             environment: newUser.environment,
             username: newUser.username,
             email: newUser.email,
-            balances: {tether: newUser.testBal},
+            balances: {fiat: member.fiatBal, tether: member.tetherBal, test: member.testBal},
             invites: newUser.invites,
             addresses: [],
             bids: [],
@@ -94,14 +94,15 @@ async function getUser(req, res) {
             secret,
             { expiresIn: '24h' },
         )
+        const isAddresses = () => member.addresses ? member.addresses : []
         
         const user = {
             environment: member.environment,
             username: member.username,
             email: member.email,
-            balances: member.envorment == 'practice' ? {tether: member.testBal} : {fiat: member.fiatBal, tether: member.tetherBal},
+            balances: {fiat: member.fiatBal, tether: member.tetherBal, test: member.testBal},
             invites: member.invites,
-            addresses: member.addresses,
+            addresses: isAddresses(),
             bids: member.bids ? member.bids : [],
             transactions: member.transactions ? member.transactions : [],
         }

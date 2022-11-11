@@ -18,6 +18,7 @@ function Dashboard() {
     const navigate = useNavigate()
     const auth = useAuthUser()
     const user = auth().user
+    console.log(user)
 
 
     function logout() {
@@ -25,27 +26,31 @@ function Dashboard() {
         navigate('/')
     }
 
+    const isUserEnvPractice = () => user.environment == 'practice' ? user.balances.test : user.balances.tether
+
     const Card = () => {
         return (
-            <Stack gap={3}>
-                <div>
-                    <Row>
-                        <Col>Username</Col>
-                        <Col>{user.username}</Col>
-                    </Row>
-                </div>
-                <div>
-                    <Row>
-                        <Col>Balance</Col>
-                        <Col>{user.balances.tether}</Col>
-                    </Row>
-                </div>
-            </Stack>
+            <Container>
+                <Stack gap={1}>
+                    <div>
+                        <Row>
+                            <Col xs={6}>Username</Col>
+                            <Col xs={6}>{user.username}</Col>
+                        </Row>
+                    </div>
+                    <div>
+                        <Row>
+                            <Col xs={6}>Balance</Col>
+                            <Col xs={6}>{isUserEnvPractice()}</Col>
+                        </Row>
+                    </div>
+                </Stack>
+            </Container>
         )
     }
     
     return (
-        <Navbar variant="secondary" bg="primary" expand="lg">
+        <Navbar className="mb-5 border border-success rounded-pill" variant="secondary" bg="primary" expand="lg">
             <Container fluid>
                 <Navbar.Brand onClick={() => {navigate('/')}}><FaHome /></Navbar.Brand>
                 <Navbar.Toggle aria-controls="dashboard" />

@@ -8,6 +8,7 @@ import { UserContext } from '../util/userFuncs'
 // Main AuthCard Component
 function AuthCard() {
     const user = useContext(UserContext)
+    const isUserEnvPractice = () => user.environment == 'practice' ? user.balances.test : user.balances.tether
 
     return (
         <Container fluid>
@@ -22,7 +23,7 @@ function AuthCard() {
                 <div>
                     <Row>
                         <Col><h4>Balance</h4></Col>
-                        <Col><h5>{user.balances.tether}</h5></Col>
+                        <Col><h5>{isUserEnvPractice()}</h5></Col>
                     </Row>
                 </div>
             </Stack>

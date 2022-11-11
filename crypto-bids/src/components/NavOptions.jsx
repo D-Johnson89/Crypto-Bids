@@ -17,7 +17,7 @@ function NavOptions() {
         <>
             {!isAuthenticated() ? <LogOptions /> : <Dashboard />}
             <UserContext.Provider value={isAuthenticated() ? auth().user : null} >
-                <Outlet/>
+                <Outlet />
             </UserContext.Provider>
         </>
     )

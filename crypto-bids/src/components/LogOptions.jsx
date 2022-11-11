@@ -9,7 +9,7 @@ import NavDropdown from 'react-bootstrap/NavDropdown'
 function LogOptions() {
     const navigate = useNavigate()
 	return (
-		<Navbar variant="secondary" bg="primary" expand="lg">
+		<Navbar className="mb-5 border border-success rounded-pill" variant="secondary" bg="primary" expand="lg">
 			<Container fluid>
 				<Navbar.Brand onClick={() =>{ navigate('/') }}><FaHome /></Navbar.Brand>
 				<Navbar.Toggle aria-controls="log-options" />

@@ -17,6 +17,7 @@ function AddAddress() {
     const authHeader = useAuthHeader()
     const token = authHeader().split(' ')[1]
     const id = user.addresses.length ? user.addresses.length : 0
+    console.log(id)
 
     // onSubmit function for saving adresses
     function submitForm(e) {
