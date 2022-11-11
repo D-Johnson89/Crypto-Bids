@@ -1,4 +1,4 @@
-import React, from 'react'
+import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import { FaUserCircle, FaPiggyBank, FaUserLock, FaSignOutAlt, FaTrashAlt, FaHome } from 'react-icons/fa'
 import Nav from 'react-bootstrap/Nav'

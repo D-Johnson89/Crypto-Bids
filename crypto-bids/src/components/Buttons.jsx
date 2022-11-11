@@ -1,26 +1,28 @@
 import React from 'react'
 import Container from 'react-bootstrap/Container'
 import Button from 'react-bootstrap/Button'
-import Row from 'react-bootstrap/Row'
-import Col from 'react-bootstrap/Col'
 
 
+// Function to create app's basic ui nap buttons
 function Buttons({ buttons }) {
+    
+
   return (
-    <div>
-        <Container>
-            {buttons.map((button) => {
-                <Row>
-                    <Col>
-                        <Button key={button.id}>
-                            <div>{button.icon}</div>
-                            <span>{button.text}</span>
-                        </Button>
-                    </Col>
-                </Row>
-            })}
-        </Container>
-    </div>
+    <Container
+        style={{
+            display: "grid",
+            gridTemplateColumns: "auto auto auto",
+            gridTemplateRows: "auto auto",
+        }}
+    >
+        {buttons.map((button) => {
+            console.log(button);
+            <Button key={button.id} variant="primary">
+                <div>{button.icon}</div>
+                <span>{button.text}</span>
+            </Button>
+        })}
+    </Container>
   )
 }
 

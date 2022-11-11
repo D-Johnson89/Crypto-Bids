@@ -53,7 +53,7 @@ function Login() {
 						value={email}
 						onChange={(e) => setEmail(e.target.value)}
 						placeholder="Enter Email"
-						pattern="/[\w\.?\W?]+\@[\w]+\.\w+/"
+						//pattern="/[\w\.?\W?]+\@[\w]+\.\w+/"
 						required
 					/>
 				</Form.Group>
@@ -65,7 +65,7 @@ function Login() {
 						value={password}
 						onChange={(e) => setPassword(e.target.value)}
 						placeholder="Enter Password"
-						pattern="/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,15}/"
+						//pattern="/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W).{8,15}/"
 						required
 					/>
 				</Form.Group>
