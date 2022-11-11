@@ -16,11 +16,12 @@ function Buttons({ buttons }) {
         }}
     >
         {buttons.map((button) => {
-            console.log(button);
-            <Button key={button.id} variant="primary">
-                <div>{button.icon}</div>
-                <span>{button.text}</span>
-            </Button>
+            return (
+                <Button key={button.id}>
+                    <div>{button.icon}</div>
+                    <span>{button.text}</span>
+                </Button>
+            )
         })}
     </Container>
   )
