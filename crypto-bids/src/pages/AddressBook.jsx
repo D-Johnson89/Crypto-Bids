@@ -47,13 +47,10 @@ function AddressBook() {
                             variant='primary'
                             onClick={() => {
                                 deleteAddress(user, token, address.id)
-                                setAddresses(
-                                    addresses.filter(
-                                        (address) => {
-                                            address.id !== addresses.id
-                                        }
-                                    )
+                                const tempAddresses = addresses.slice(
+                                    address.id, address.id + 1
                                 )
+                                setAddresses(tempAddresses)
                             }}
                         >
                             Delete

@@ -12,11 +12,24 @@ function AddAddress() {
     const [institute, setInstitute] = useState('')
     const [address, setAddress] = useState('')
     const user = useContext(UserContext)
+    const addresses = user.addresses
 
     const navigate = useNavigate()
     const authHeader = useAuthHeader()
     const token = authHeader().split(' ')[1]
-    const id = user.addresses.length ? user.addresses.length : 0
+    let id
+    if (addresses.length) {
+        for (let i = 0; i < addresses.length; i++) {
+            console.log(addresses[i])
+            if (addresses[i].id !== i) {
+                id = i
+            } else {
+                continue
+            }
+        }
+    } else {
+        id = 0
+    }
     console.log(id)
 
     // onSubmit function for saving adresses
