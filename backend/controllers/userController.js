@@ -34,7 +34,7 @@ async function setUser (req, res) {
             environment: newUser.environment,
             username: newUser.username,
             email: newUser.email,
-            balances: {fiat: member.fiatBal, tether: member.tetherBal, test: member.testBal},
+            balances: {fiat: newUser.fiatBal, tether: newUser.tetherBal, test: newUser.testBal},
             invites: newUser.invites,
             addresses: [],
             bids: [],

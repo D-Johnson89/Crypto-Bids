@@ -11,7 +11,7 @@ function AddAddress() {
     // Set states
     const [institute, setInstitute] = useState('')
     const [address, setAddress] = useState('')
-    const user = useContext(UserContext)
+    const [user, setUser] = useState(useContext(UserContext))
     const addresses = user.addresses
 
     const navigate = useNavigate()
@@ -19,7 +19,7 @@ function AddAddress() {
     const token = authHeader().split(' ')[1]
     let id
     if (addresses.length) {
-        for (let i = 0; i < addresses.length; i++) {
+        for (let i = 0; i <= addresses.length; i++) {
             console.log(addresses[i])
             if (addresses[i].id !== i) {
                 id = i
@@ -42,7 +42,9 @@ function AddAddress() {
         promise.then((data) => {
             if (data.message == 'Address Saved') {
                 const wdAddress = data.wdAddress
-                user.addresses.push(wdAddress)
+                const member = user
+                member.addresses.push(wdAddress)
+                setUser(member)
                 navigate('/addressBook')
             } else {
                 alert('Address not saved!')
