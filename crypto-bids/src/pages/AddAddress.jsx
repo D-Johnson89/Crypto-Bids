@@ -19,10 +19,12 @@ function AddAddress() {
     const token = authHeader().split(' ')[1]
     let id
     if (addresses.length) {
-        for (let i = 0; i <= addresses.length; i++) {
+        id = addresses.length
+        for (let i = 0; i < addresses.length; i++) {
             console.log(addresses[i])
             if (addresses[i].id !== i) {
                 id = i
+                break
             } else {
                 continue
             }
@@ -42,8 +44,10 @@ function AddAddress() {
         promise.then((data) => {
             if (data.message == 'Address Saved') {
                 const wdAddress = data.wdAddress
-                const member = user
+                const member = JSON.parse(JSON.stringify(user))
                 member.addresses.push(wdAddress)
+                console.log('User: ', user)
+                console.log('Member: ', member)
                 setUser(member)
                 navigate('/addressBook')
             } else {

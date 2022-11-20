@@ -1,7 +1,9 @@
 import { createContext } from 'react'
-//import { resolvePath } from 'react-router-dom'
 
-export const UserContext = createContext(null)
+export const UserContext = createContext({
+    user: null,
+    setUser: () => {}
+})
 
 
 // Function to register user
