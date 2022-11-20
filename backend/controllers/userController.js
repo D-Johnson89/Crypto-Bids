@@ -29,6 +29,12 @@ async function setUser (req, res) {
             secret,
             { expiresIn: '24h' },
         )
+
+        const refreshToken = jwt.sign(
+            { token: jwtToken },
+            secret,
+            { expiresIn: '48h' }
+        )
         
         const user = {
             environment: newUser.environment,
@@ -43,7 +49,7 @@ async function setUser (req, res) {
 
         return res
             .status(201)
-            .json({ message: "Registered Successfully", token: jwtToken, user: user })
+            .json({ message: "Registered Successfully", token: jwtToken, user: user, refreshToken: refreshToken })
 
     // Catch errors
     } catch (err) {
@@ -94,6 +100,13 @@ async function getUser(req, res) {
             secret,
             { expiresIn: '24h' },
         )
+
+        const refreshToken = jwt.sign(
+            { token: jwtToken },
+            secret,
+            { expiresIn: '48h' },
+        )
+
         const isAddresses = () => member.addresses ? member.addresses : []
         
         const user = {
@@ -109,7 +122,7 @@ async function getUser(req, res) {
 
         return res
             .status(200)
-            .json({ message: 'Welcome Back!', token: jwtToken, user: user })
+            .json({ message: 'Welcome Back!', token: jwtToken, user: user, refreshToken: refreshToken })
         
     // Catch Errors
     } catch (err) {

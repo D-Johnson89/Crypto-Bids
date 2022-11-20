@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import { useAuthHeader } from 'react-auth-kit'
-import { changePW, UserContext } from '../util/userFuncs'
+import { changePW } from '../util/userFuncs'
 
 function ChangePW() {
     // Set old pw, new pw, and confirmation pw states

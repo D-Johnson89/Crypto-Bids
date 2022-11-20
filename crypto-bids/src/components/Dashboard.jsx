@@ -9,8 +9,8 @@ import Stack from 'react-bootstrap/Stack'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Button from 'react-bootstrap/Button'
-import { useSignOut } from 'react-auth-kit'
-import { useAuthUser } from 'react-auth-kit'
+import { useSignOut, useAuthUser } from 'react-auth-kit'
+
 
 // Main User Nav Options
 function Dashboard() {
@@ -18,7 +18,6 @@ function Dashboard() {
     const navigate = useNavigate()
     const auth = useAuthUser()
     const user = auth().user
-    console.log(user)
 
 
     function logout() {

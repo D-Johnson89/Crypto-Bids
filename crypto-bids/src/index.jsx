@@ -4,14 +4,17 @@ import ReactDOM from "react-dom/client"
 import { BrowserRouter } from "react-router-dom"
 import { AuthProvider } from 'react-auth-kit'
 import Routes from "./App"
+import refreshApi from "./refreshApi"
 
 
 ReactDOM.createRoot(document.getElementById("root")).render(
 	<React.StrictMode>
-        <AuthProvider authType={'cookie'}
+        <AuthProvider
+            authType={'cookie'}
             authName={'_auth'}
             cookieDomain={window.location.hostname}
-            cookieSecure={false} > {/*window.location.protocol === "https:"*/}
+            cookieSecure={false/*window.location.protocol === "https:"*/}
+            refresh={refreshApi} >
             <BrowserRouter>
                 <Routes/>
             </BrowserRouter>

@@ -5,12 +5,12 @@ import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import { loginUser} from '../util/userFuncs'
 
+
 // Main Login function
 function Login() {
 	// Set email and password states
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
-	const [error, setError] = useState(null)
 	const signIn = useSignIn()
 	const navigate = useNavigate()
 
@@ -25,9 +25,11 @@ function Login() {
                 
                 signIn({
                     token: data.token,
-                    expiresIn: 1440,
+                    expiresIn: 120,
                     tokenType: 'Bearer',
                     authState: { user: data.user},
+                    refreshToken: data.refreshToken,
+                    refreshTokenExpireIn: 180,
                 })
                 // Navigate to home with user data
                 navigate('/')

@@ -1,13 +1,14 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import Stack from 'react-bootstrap/Stack'
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
-import { UserContext } from '../util/userFuncs'
+import { useAuthUser } from 'react-auth-kit'
 
 // Main AuthCard Component
 function AuthCard() {
-    const user = useContext(UserContext)
+    const auth = useAuthUser()
+    const user = auth().user
     const isUserEnvPractice = () => user.environment == 'practice' ? user.balances.test : user.balances.tether
 
     return (

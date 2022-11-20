@@ -1,7 +1,4 @@
-import { createContext } from 'react'
 //import { resolvePath } from 'react-router-dom'
-
-export const UserContext = createContext(null)
 
 
 // Function to register user
@@ -102,6 +99,7 @@ export function deleteAddress(user, token, item) {
             })
             .then((data) => {
                 if(data.message == 'Address deleted') {
+                    //May have to look at deleting addresses another way
                     user.addresses.splice(item, 1)
                     alert(data.message)
                 } else {

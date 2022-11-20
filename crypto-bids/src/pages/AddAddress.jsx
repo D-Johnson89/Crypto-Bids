@@ -1,17 +1,20 @@
-import React, { useState, useContext } from 'react'
+import React, { useState } from 'react'
 import Container from 'react-bootstrap/Container'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import { useNavigate } from 'react-router-dom'
-import { useAuthHeader } from 'react-auth-kit'
-import { UserContext, saveAddress } from '../util/userFuncs'
+import { useAuthHeader, useAuthUser } from 'react-auth-kit'
+import { saveAddress } from '../util/userFuncs'
+import refreshApi from '../refreshApi'
 
 // Main AddAddress function
 function AddAddress() {
     // Set states
     const [institute, setInstitute] = useState('')
     const [address, setAddress] = useState('')
-    const [user, setUser] = useState(useContext(UserContext))
+
+    const auth = useAuthUser()
+    const user = auth().user
     const addresses = user.addresses
 
     const navigate = useNavigate()
@@ -19,18 +22,23 @@ function AddAddress() {
     const token = authHeader().split(' ')[1]
     let id
     if (addresses.length) {
-        for (let i = 0; i <= addresses.length; i++) {
-            console.log(addresses[i])
-            if (addresses[i].id !== i) {
+        for (let i = 0; i < addresses.length; i++) {
+            if (addresses === undefined) {
                 id = i
+                console.log('id: ', id, 'i: ', i)
+                break
+            } else if (addresses[i].id !== i) {
+                id = i
+                console.log('id: ', id, 'i: ', i)
+                break
             } else {
                 continue
             }
+            console.log('id: ', id, 'i: ', i)
         }
     } else {
         id = 0
     }
-    console.log(id)
 
     // onSubmit function for saving adresses
     function submitForm(e) {
@@ -42,9 +50,9 @@ function AddAddress() {
         promise.then((data) => {
             if (data.message == 'Address Saved') {
                 const wdAddress = data.wdAddress
-                const member = user
+                const member = JSON.parse(JSON.stringify(user))
                 member.addresses.push(wdAddress)
-                setUser(member)
+                console.log(user)
                 navigate('/addressBook')
             } else {
                 alert('Address not saved!')

@@ -27,9 +27,11 @@ function Register() {
                 if (data.message == "Registered Successfully") {
                     signIn({
                         token: data.token,
-                        expiresIn: 1440,
+                        expiresIn: 120,
                         tokenType: 'Bearer',
                         authState: { user: data.user },
+                        refreshToken: data.refreshToken,
+                        refreshTokenExpireIn: 180,
                     })
                     navigate('/')
                 } else {
