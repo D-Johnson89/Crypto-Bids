@@ -52,6 +52,7 @@ function AddAddress() {
                 const wdAddress = data.wdAddress
                 const member = JSON.parse(JSON.stringify(user))
                 member.addresses.push(wdAddress)
+                refreshApi()
                 console.log(user)
                 navigate('/addressBook')
             } else {
