@@ -33,7 +33,7 @@ function Register() {
                     })
                     navigate('/')
                 } else {
-                    alert('Email or username already exists')
+                    alert(`${data.message}`)
                 }
             })
         } else {

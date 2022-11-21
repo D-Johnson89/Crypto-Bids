@@ -1,15 +1,16 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useSignIn } from 'react-auth-kit'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
-import { loginUser} from '../util/userFuncs'
+import { loginUser, UserContext } from '../util/userFuncs'
 
 // Main Login function
 function Login() {
 	// Set email and password states
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
+    const { user, setUser } = useContext(UserContext)
 	const signIn = useSignIn()
 	const navigate = useNavigate()
 
@@ -21,12 +22,12 @@ function Login() {
         const promise = loginUser(email, password)
         promise.then((data) => {
             if (data.token) {
-                
+                setUser(data.user)
                 signIn({
                     token: data.token,
                     expiresIn: 1440,
                     tokenType: 'Bearer',
-                    authState: { user: data.user},
+                    authState: { user: user },
                 })
                 // Navigate to home with user data
                 navigate('/')
