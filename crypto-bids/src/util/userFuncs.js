@@ -1,9 +1,6 @@
 import { createContext } from 'react'
 
-export const UserContext = createContext({
-    user: null,
-    setUser: () => {}
-})
+export const UserContext = createContext()
 
 
 // Function to register user

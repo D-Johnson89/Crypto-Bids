@@ -10,7 +10,7 @@ function Login() {
 	// Set email and password states
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
-    const { user, setUser } = useContext(UserContext)
+    const [user, setUser] = useContext(UserContext)
 	const signIn = useSignIn()
 	const navigate = useNavigate()
 
@@ -22,7 +22,9 @@ function Login() {
         const promise = loginUser(email, password)
         promise.then((data) => {
             if (data.token) {
+                console.log(user)
                 setUser(data.user)
+                console.log(user)
                 signIn({
                     token: data.token,
                     expiresIn: 1440,
