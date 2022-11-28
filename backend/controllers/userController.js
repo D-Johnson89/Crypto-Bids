@@ -95,6 +95,10 @@ async function getUser(req, res) {
             { expiresIn: '24h' },
         )
         const isAddresses = () => member.addresses ? member.addresses : []
+
+        const isBids = () => member.bids ? member.bids : []
+        
+        const isTransactions = () => member.transactions ? member.transactions : []
         
         const user = {
             environment: member.environment,
@@ -103,8 +107,8 @@ async function getUser(req, res) {
             balances: {fiat: member.fiatBal, tether: member.tetherBal, test: member.testBal},
             invites: member.invites,
             addresses: isAddresses(),
-            bids: member.bids ? member.bids : [],
-            transactions: member.transactions ? member.transactions : [],
+            bids: isBids(),
+            transactions: isTransactions(),
         }
 
         return res
