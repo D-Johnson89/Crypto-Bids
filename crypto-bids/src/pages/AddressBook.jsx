@@ -6,11 +6,12 @@ import Stack from 'react-bootstrap/Stack'
 import Button from 'react-bootstrap/Button'
 import { FaPlus } from 'react-icons/fa'
 import { deleteAddress } from '../util/userFuncs'
-import { useAuthHeader, useAuthUser } from 'react-auth-kit'
+import { useAuthHeader, useAuthUser, useSignIn } from 'react-auth-kit'
 
 // Main AddressBook Component
 function AddressBook() {
     const navigate = useNavigate()
+    const signIn = useSignIn()
     const authHeader = useAuthHeader()
     const token = authHeader().split(' ')[1]
     const auth = useAuthUser()
@@ -18,6 +19,27 @@ function AddressBook() {
     let wdAddresses = user.addresses
     const [addresses, setAddresses] = useState(wdAddresses)
     
+    function handleClick(user, token, address) {
+
+        const promise = deleteAddress(user, token, address)
+        console.log(promise)
+        promise.then((data) => {
+            if(data.message == 'Address deleted') {
+                //May have to look at deleting addresses another way
+                alert(data.message)
+
+                signIn({
+                    token: data.token,
+                    expiresIn: 120,
+                    tokenType: 'Bearer',
+                    authState: { user: data.user },
+                })
+                
+            } else {
+                alert(data.message)
+            }
+        })
+    }
 
     return (
         <Container fluid>
@@ -43,11 +65,7 @@ function AddressBook() {
                                 <Button
                                     variant='primary'
                                     onClick={() => {
-                                        deleteAddress(user, token, address.id)
-                                        const tempAddresses = addresses.slice(
-                                            address.id, address.id + 1
-                                        )
-                                        setAddresses(tempAddresses)
+                                        handleClick(user, token, address.id)
                                     }}
                                 >
                                     Delete

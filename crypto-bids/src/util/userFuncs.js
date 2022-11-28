@@ -97,15 +97,6 @@ export function deleteAddress(user, token, item) {
             .then((response) => {
                 return response.json()
             })
-            .then((data) => {
-                if(data.message == 'Address deleted') {
-                    //May have to look at deleting addresses another way
-                    user.addresses.splice(item, 1)
-                    alert(data.message)
-                } else {
-                    alert(data.message)
-                }
-            })
         } catch (err) {
             console.log(err)
         }

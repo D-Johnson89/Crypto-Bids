@@ -30,8 +30,6 @@ function Register() {
                         expiresIn: 120,
                         tokenType: 'Bearer',
                         authState: { user: data.user },
-                        refreshToken: data.refreshToken,
-                        refreshTokenExpireIn: 180,
                     })
                     navigate('/')
                 } else {

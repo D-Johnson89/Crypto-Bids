@@ -3,7 +3,29 @@ const User = require('../models/user.model')
 const jwt = require('jsonwebtoken')
 const secret = process.env.SECRET || 'MY_S3CR3T_K3Y'
 
+/*
+Set user object
+*/
+function createUserObject (member) {
+    const isAddresses = () => member.addresses ? member.addresses : []
 
+    const isBids = () => member.bids ? member.bids : []
+
+    const isTransactions = () => member.transactions ? member.transactions : []
+    
+    const user = {
+        environment: member.environment,
+        username: member.username,
+        email: member.email,
+        balances: {fiat: member.fiatBal, tether: member.tetherBal, test: member.testBal},
+        invites: member.invites,
+        addresses: isAddresses(),
+        bids: isBids(),
+        transactions: isTransactions(),
+    }
+
+    return user
+}
 /*
   @ desc Creates User
   @ route POST api/register
@@ -29,27 +51,12 @@ async function setUser (req, res) {
             secret,
             { expiresIn: '24h' },
         )
-
-        const refreshToken = jwt.sign(
-            { token: jwtToken },
-            secret,
-            { expiresIn: '48h' }
-        )
         
-        const user = {
-            environment: newUser.environment,
-            username: newUser.username,
-            email: newUser.email,
-            balances: {fiat: newUser.fiatBal, tether: newUser.tetherBal, test: newUser.testBal},
-            invites: newUser.invites,
-            addresses: [],
-            bids: [],
-            transactions: [],
-        }
+        const user = createUserObject(newUser)
 
         return res
             .status(201)
-            .json({ message: "Registered Successfully", token: jwtToken, user: user, refreshToken: refreshToken })
+            .json({ message: "Registered Successfully", token: jwtToken, user: user })
 
     // Catch errors
     } catch (err) {
@@ -101,28 +108,11 @@ async function getUser(req, res) {
             { expiresIn: '24h' },
         )
 
-        const refreshToken = jwt.sign(
-            { token: jwtToken },
-            secret,
-            { expiresIn: '48h' },
-        )
-
-        const isAddresses = () => member.addresses ? member.addresses : []
-        
-        const user = {
-            environment: member.environment,
-            username: member.username,
-            email: member.email,
-            balances: {fiat: member.fiatBal, tether: member.tetherBal, test: member.testBal},
-            invites: member.invites,
-            addresses: isAddresses(),
-            bids: member.bids ? member.bids : [],
-            transactions: member.transactions ? member.transactions : [],
-        }
+        const user = createUserObject(member)
 
         return res
             .status(200)
-            .json({ message: 'Welcome Back!', token: jwtToken, user: user, refreshToken: refreshToken })
+            .json({ message: 'Welcome Back!', token: jwtToken, user: user })
         
     // Catch Errors
     } catch (err) {
@@ -155,11 +145,30 @@ async function addAddress(req, res) {
     const email = jwt.verify(token, secret).email
 
     try {
-        await User.findOneAndUpdate({ email }, { $push: { addresses: wdAddress } })
+        const member = await User.findOneAndUpdate({ email }, { $push: { addresses: wdAddress } }).catch(
+            (err) => {
+                console.error(err)
+                return res
+                    .status(400)
+                    .json({ message: 'Something went wrong' })
+            }
+        )
+
+        const jwtToken = jwt.sign(
+            {
+                userId: member._id,
+                username: member.username,
+                email: member.email,
+            },
+            secret,
+            { expiresIn: '24h' },
+        )
+
+        const user = createUserObject(member)
 
         return res
             .status(201)
-            .json({ message: 'Address Saved', wdAddress: wdAddress })
+            .json({ message: 'Address Saved', token: jwtToken, user: user })
     } catch (err) {
         return res
             .status(400)
@@ -183,13 +192,32 @@ async function deleteAddress(req, res) {
 
 
     try {
-        await User.updateOne(
+        const member = await User.updateOne(
             { email: email }, { $pull: { addresses: { id: address }}}
+        ).catch(
+            (err) => {
+                console.error(err)
+                return res
+                    .status(400)
+                    .json({ message: 'Something went wrong' })
+            }
         )
+
+        const jwtToken = jwt.sign(
+            {
+                userId: member._id,
+                username: member.username,
+                email: member.email,
+            },
+            secret,
+            { expiresIn: '24h' },
+        )
+
+        const user = createUserObject(member)
 
         return res
             .status(201)
-            .json({ message: 'Address deleted' })
+            .json({ message: 'Address deleted', token: jwtToken, user: user })
     } catch (err) {
         return res
             .status(400)

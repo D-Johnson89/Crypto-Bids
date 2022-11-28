@@ -13,9 +13,7 @@ function NavOptions() {
     return (
         <>
             {!isAuthenticated() ? <LogOptions /> : <Dashboard />}
-            
-                <Outlet />
-            
+            <Outlet />
         </>
     )
 }

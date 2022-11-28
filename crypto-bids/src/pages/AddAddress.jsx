@@ -3,9 +3,8 @@ import Container from 'react-bootstrap/Container'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import { useNavigate } from 'react-router-dom'
-import { useAuthHeader, useAuthUser } from 'react-auth-kit'
+import { useAuthHeader, useAuthUser, useSignIn } from 'react-auth-kit'
 import { saveAddress } from '../util/userFuncs'
-import refreshApi from '../refreshApi'
 
 // Main AddAddress function
 function AddAddress() {
@@ -13,6 +12,7 @@ function AddAddress() {
     const [institute, setInstitute] = useState('')
     const [address, setAddress] = useState('')
 
+    const signIn = useSignIn()
     const auth = useAuthUser()
     const user = auth().user
     const addresses = user.addresses
@@ -21,6 +21,7 @@ function AddAddress() {
     const authHeader = useAuthHeader()
     const token = authHeader().split(' ')[1]
     let id
+
     if (addresses.length) {
         for (let i = 0; i < addresses.length; i++) {
             if (addresses === undefined) {
@@ -32,9 +33,9 @@ function AddAddress() {
                 console.log('id: ', id, 'i: ', i)
                 break
             } else {
+                console.log('id: ', id, 'i: ', i)
                 continue
             }
-            console.log('id: ', id, 'i: ', i)
         }
     } else {
         id = 0
@@ -49,11 +50,14 @@ function AddAddress() {
         
         promise.then((data) => {
             if (data.message == 'Address Saved') {
-                const wdAddress = data.wdAddress
-                const member = JSON.parse(JSON.stringify(user))
-                member.addresses.push(wdAddress)
-                refreshApi()
-                console.log(user)
+                
+                signIn({
+                    token: data.token,
+                    expiresIn: 120,
+                    tokenType: 'Bearer',
+                    authState: { user: data.user },
+                })
+                
                 navigate('/addressBook')
             } else {
                 alert('Address not saved!')

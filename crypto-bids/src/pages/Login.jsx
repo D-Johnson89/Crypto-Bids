@@ -27,9 +27,7 @@ function Login() {
                     token: data.token,
                     expiresIn: 120,
                     tokenType: 'Bearer',
-                    authState: { user: data.user},
-                    refreshToken: data.refreshToken,
-                    refreshTokenExpireIn: 180,
+                    authState: { user: data.user },
                 })
                 // Navigate to home with user data
                 navigate('/')
