@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { FaUserCircle, FaPiggyBank, FaUserLock, FaSignOutAlt, FaTrashAlt, FaHome } from 'react-icons/fa'
 import Nav from 'react-bootstrap/Nav'
@@ -9,15 +9,15 @@ import Stack from 'react-bootstrap/Stack'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Button from 'react-bootstrap/Button'
-import { useSignOut } from 'react-auth-kit'
-import { useAuthUser } from 'react-auth-kit'
+import { useSignOut, useAuthUser } from 'react-auth-kit'
+import { UserContext } from '../util/userFuncs'
 
 // Main User Nav Options
 function Dashboard() {
     const signOut = useSignOut()
     const navigate = useNavigate()
     const auth = useAuthUser()
-    const user = auth().user
+    const user = useContext(UserContext)
     console.log(user)
 
 

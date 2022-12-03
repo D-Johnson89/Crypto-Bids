@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useSignIn } from 'react-auth-kit'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
-import { registerUser } from '../util/userFuncs'
+import { registerUser, UserContext } from '../util/userFuncs'
 
 // Main Register function
 function Register() {
@@ -12,6 +12,7 @@ function Register() {
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
 	const [confirmation, setConfirmation] = useState('')
+    const {user, setUser} = useContext(UserContext)
 	const navigate = useNavigate()
 	const signIn = useSignIn()
 
@@ -25,6 +26,9 @@ function Register() {
             const promise = registerUser(username, email, password)
             promise.then((data) => {
                 if (data.message == "Registered Successfully") {
+                    console.log(user)
+                    setUser(data.user)
+                    console.log(user)
                     signIn({
                         token: data.token,
                         expiresIn: 1440,
