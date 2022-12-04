@@ -4,7 +4,8 @@ import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import { useNavigate } from 'react-router-dom'
 import { useAuthHeader } from 'react-auth-kit'
-import { UserContext, saveAddress } from '../util/userFuncs'
+import { saveAddress } from '../util/userFuncs'
+import { UserContext } from '../util/UserContext'
 
 // Main AddAddress function
 function AddAddress() {

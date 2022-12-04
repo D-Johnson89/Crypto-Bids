@@ -10,7 +10,7 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Button from 'react-bootstrap/Button'
 import { useSignOut, useAuthUser } from 'react-auth-kit'
-import { UserContext } from '../util/userFuncs'
+import { UserContext } from '../util/UserContext'
 
 // Main User Nav Options
 function Dashboard() {

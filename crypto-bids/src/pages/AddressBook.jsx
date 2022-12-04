@@ -5,7 +5,8 @@ import Card from 'react-bootstrap/Card'
 import Stack from 'react-bootstrap/Stack'
 import Button from 'react-bootstrap/Button'
 import { FaPlus } from 'react-icons/fa'
-import { UserContext, deleteAddress } from '../util/userFuncs'
+import { deleteAddress } from '../util/userFuncs'
+import { UserContext } from '../util/UserContext'
 import { useAuthHeader } from 'react-auth-kit'
 
 // Main AddressBook Component

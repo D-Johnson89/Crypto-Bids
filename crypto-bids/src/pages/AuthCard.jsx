@@ -3,7 +3,7 @@ import Stack from 'react-bootstrap/Stack'
 import Container from 'react-bootstrap/Container'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
-import { UserContext } from '../util/userFuncs'
+import { UserContext } from '../util/UserContext'
 
 // Main AuthCard Component
 function AuthCard() {

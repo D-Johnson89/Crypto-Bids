@@ -3,7 +3,8 @@ import { useNavigate, Link } from 'react-router-dom'
 import { useSignIn } from 'react-auth-kit'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
-import { loginUser, UserContext } from '../util/userFuncs'
+import { loginUser } from '../util/userFuncs'
+import { UserContext } from '../util/UserContext'
 
 // Main Login function
 function Login() {

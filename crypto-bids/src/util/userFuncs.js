@@ -1,8 +1,3 @@
-import { createContext } from 'react'
-
-export const UserContext = createContext()
-
-
 // Function to register user
 export function registerUser(username, email, password) {
 
