@@ -5,37 +5,81 @@ import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import { registerUser } from '../util/userFuncs'
 
-// Main Register function
+/*
+  Main Register function
+*/
 function Register() {
-	// Set form states
+
+	/*
+      Set form states
+    */
 	const [username, setUsername] = useState('')
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
 	const [confirmation, setConfirmation] = useState('')
+
+    /*
+      Set hook functions
+    */
 	const navigate = useNavigate()
 	const signIn = useSignIn()
 
-    // Submit form function
+    /*
+      Submit form function
+    */
     function submitForm(e) {
 
-        // Prevent default page refresh
+        /*
+          Prevent default page refresh
+        */
         e.preventDefault()
 
+
+        /*
+          If password == confirmation password send use a userFunc to send data to backend to register user
+        */
         if (password == confirmation) {
+
+            /*
+              Call registerUser as a promise to manipulate the return data
+            */
             const promise = registerUser(username, email, password)
             promise.then((data) => {
+
+
+                /*
+                  If return message == 'Registered Successfully', sign-in user and navigate to homepage
+                */
                 if (data.message == "Registered Successfully") {
+
+                    /*
+                      Sign-in user
+                    */
                     signIn({
                         token: data.token,
                         expiresIn: 120,
                         tokenType: 'Bearer',
                         authState: { user: data.user },
                     })
+
+                    /*
+                      Navigate home
+                    */
                     navigate('/')
+
+
+                    /*
+                      Else, alert user email or username already exists
+                    */
                 } else {
                     alert('Email or username already exists')
                 }
             })
+
+
+            /*
+              Else alert user passwords must match
+            */
         } else {
             alert('Confirmation must match password')
         }

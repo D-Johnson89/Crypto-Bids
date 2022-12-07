@@ -12,21 +12,47 @@ import Button from 'react-bootstrap/Button'
 import { useSignOut, useAuthUser } from 'react-auth-kit'
 
 
-// Main User Nav Options
+/*
+  Main User Nav Options
+*/
 function Dashboard() {
+
+    /*
+      Set hook functions
+    */
     const signOut = useSignOut()
     const navigate = useNavigate()
     const auth = useAuthUser()
+
+    /*
+      Set user with auth-state
+    */
     const user = auth().user
 
-
+    /*
+      onClick logout function
+    */
     function logout() {
+
+        /*
+          Sign-out user
+        */
         signOut()
+
+        /*
+         Navigate home
+        */
         navigate('/')
     }
 
+    /*
+      Function to check for user env == practice to return test balance
+    */
     const isUserEnvPractice = () => user.environment == 'practice' ? user.balances.test : user.balances.tether
 
+    /*
+      Component variable to display user card that acts as button
+    */
     const Card = () => {
         return (
             <Container>

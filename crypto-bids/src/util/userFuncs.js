@@ -1,34 +1,48 @@
-//import { resolvePath } from 'react-router-dom'
-
-
-// Function to register user
+/*
+  Function to register user
+*/
 export function registerUser(username, email, password) {
 
-        return fetch('http://localhost:5000/api/users/register', {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                username,
-                email,
-                password,
-            }),
-        })
-        .then((response) => {
-            return response.json()
-        })
-       .catch ((err) => {
-        console.log('Error: ', err)
-        return 'Email or username already exist'
-       }) 
+    /*
+      Send data to server and try to create user
+    */
+    return fetch('http://localhost:5000/api/users/register', {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            username,
+            email,
+            password,
+        }),
+    })
+
+    /*
+      If successful, send response to page for use
+    */
+    .then((response) => {
+        return response.json()
+    })
+
+    /*
+      Else return email or username already exist
+    */
+    .catch ((err) => {
+    console.log('Error: ', err)
+    return 'Email or username already exist'
+    }) 
 }
 
 
-// Function to login user
+/*
+  Function to login user
+*/
 export function loginUser(email, password) {
 
-    // Send data to server to try to login
+    /*
+      Send data to server to try to login
+    */
     return fetch('http://localhost:5000/api/users/login', {
         method: "POST",
         headers: {
@@ -39,6 +53,10 @@ export function loginUser(email, password) {
             password,
         }),
     })
+
+    /*
+      If successful, send response to page for use
+    */
     .then((response) => {
         if(response.status != 200 && response.status != 201) {
             throw new Error('Login Failed')
@@ -46,6 +64,10 @@ export function loginUser(email, password) {
         }
         return response.json()
     })
+
+    /*
+      Else return email or password incorrect
+    */
     .catch((err) => {
         console.log("Error: ", err)
         return 'Email or password incorrect!'
@@ -53,9 +75,14 @@ export function loginUser(email, password) {
 }
 
 
-// Function to add addresses
+/*
+  Function to add addresses
+*/
 export function saveAddress(token, id, institute, address) {
 
+    /*
+      Send data to server to try to add address
+    */
     return fetch('http://localhost:5000/api/users/addAddress', {
         method: "POST",
         headers: {
@@ -68,9 +95,17 @@ export function saveAddress(token, id, institute, address) {
             address,
         }),
     })
+
+    /*
+      If successful, send response to page for use
+    */
     .then((response) => {
         return response.json()
     })
+
+    /*
+      Else return address not saved
+    */
     .catch((err) => {
         console.log('Error: ', err)
         return 'Address not saved!'
@@ -78,15 +113,31 @@ export function saveAddress(token, id, institute, address) {
 }
 
 
-// Function to delete addresses
+/*
+  Function to delete addresses
+*/
 export function deleteAddress(user, token, item) {
+
+    /*
+      Check if user wants to delete address
+    */
     const confirmBox = window.confirm(
         'Do you really want to delete this address?'
     )
 
+    /*
+      Variable function to do if user confirms delete
+    */
     const doDelete = async () => {
+
+        /*
+          Send data to server to try to delete address
+        */
         try {
-            //console.log(confirmBox, item)
+            
+            /*
+              Variable promise to handle and return to page for use
+            */
             const response = await fetch(`http://localhost:5000/api/users/addressBook`, {
                 method: "DELETE",
                 headers: {
@@ -94,22 +145,39 @@ export function deleteAddress(user, token, item) {
                     AddressId: `${item}`,
                 }
             })
+
+            /*
+              Return to page for use
+            */
             .then((response) => {
                 return response.json()
             })
+
+        /*
+          Handle errors
+        */
         } catch (err) {
             console.log(err)
         }
     }
 
+    /*
+      If user confims delete, follow through
+    */
     if (confirmBox) {
         doDelete()
     }
 }
 
 
-// Function to change password
+/*
+  Function to change password
+*/
 export function changePW(token, oldPW, newPW) {
+
+    /*
+      Send data to server to try to change password
+    */
     return fetch('http://localhost:5000/api/users/changePW', {
         method: "PUT",
         headers: {
@@ -121,9 +189,17 @@ export function changePW(token, oldPW, newPW) {
             newPW,
         }),
     })
+
+    /*
+      If successful, send response to page for use
+    */
     .then((response) => {
         return response.json()
     })
+
+    /*
+      Else return password change unsuccessful
+    */
     .catch((err) => {
         console.log('Error: ', err)
         return 'Password change unsuccessful'
@@ -131,8 +207,14 @@ export function changePW(token, oldPW, newPW) {
 }
 
 
-// Function to delete user
+/*
+  Function to delete user
+*/
 export function deleteAcc(token, password) {
+
+    /*
+      Send data to server to try to change password
+    */
     return fetch('http://localhost:5000/api/users/deleteAcc', {
         method: "DELETE",
         headers: {
@@ -143,9 +225,17 @@ export function deleteAcc(token, password) {
             password,
         }),
     })
+
+    /*
+      If successful, send response to page for use
+    */
     .then((response) => {
         return response.json()
     })
+
+    /*
+      Else return failed to delete account
+    */
     .catch((err) => {
         console.log('Error: ', err)
         return 'Failed to delete account'

@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken')
 const secret = process.env.SECRET || 'MY_S3CR3T_K3Y'
 
 /*
-Set user object
+  Set user object
 */
 function createUserObject (member) {
     const isAddresses = () => member.addresses ? member.addresses : []
@@ -33,7 +33,10 @@ function createUserObject (member) {
   @ returns {Promise<void>}
 */
 async function setUser (req, res) {
-    // Try to create new user
+
+    /*
+      Try to create new user
+    */
     try {
         const newUser = await User.create({
             username: req.body.username,
@@ -41,7 +44,9 @@ async function setUser (req, res) {
             hash: bcrypt.hashSync(req.body.password, 10)
         })
 
-        // Create token
+        /*
+          Create token
+        */
         const jwtToken = jwt.sign(
             {
                 userId: newUser._id,
@@ -52,13 +57,21 @@ async function setUser (req, res) {
             { expiresIn: '24h' },
         )
         
+        /*
+          Create user variable to pass back to front end
+        */
         const user = createUserObject(newUser)
 
+        /*
+          Send response to frontend
+        */
         return res
             .status(201)
             .json({ message: "Registered Successfully", token: jwtToken, user: user })
 
-    // Catch errors
+    /*
+      Catch errors
+    */
     } catch (err) {
         console.error('Error: ', err)
         return res
@@ -75,14 +88,25 @@ async function setUser (req, res) {
   @ returns {Promis<any>}
 */
 async function getUser(req, res) {
-    // Put form data into variables
+
+    /*
+      Put form data into variables
+    */
     const { email, password } = req.body
     
-    // Try to find user data
+    /*
+     Try to find user data
+    */
     try {
-        // Create user variable if user found
+
+        /*
+          Create user variable if user found
+        */
         const member = await User.findOne({ email }).catch(
             (err) => {
+                /*
+                  Catch errors finding user
+                */
                 console.error(err)
                 return res
                     .status(400)
@@ -90,14 +114,18 @@ async function getUser(req, res) {
             }
         )
 
-        // Check password
+        /*
+          Check password, if it doesn't match return as such
+        */
         if(!bcrypt.compareSync(password, member.hash)) {
             return res
                 .status(400)
                 .json({ message: 'Email or password does not match', user: false })
         }
 
-        // Create token for user
+        /*
+          Create token for user
+        */
         const jwtToken = jwt.sign(
             {
                 userId: member._id,
@@ -108,13 +136,21 @@ async function getUser(req, res) {
             { expiresIn: '24h' },
         )
 
+        /*
+          Create user variable to pass back to front end
+        */
         const user = createUserObject(member)
 
+        /*
+          Return response to frontend
+        */
         return res
             .status(200)
             .json({ message: 'Welcome Back!', token: jwtToken, user: user })
         
-    // Catch Errors
+    /*
+      Catch Errors
+    */
     } catch (err) {
         console.error(err)
         return res
@@ -131,7 +167,10 @@ async function getUser(req, res) {
   @ returns {Promise<void>}
 */
 async function addAddress(req, res) {
-    // Create variables from req data
+
+    /*
+      Create variables from req data
+    */
     const { id, institute, address } = req.body
     const wdAddress = {
         id: id,
@@ -140,11 +179,20 @@ async function addAddress(req, res) {
         withdrawn: 0,
     }
 
-    // Get user email
+    /*
+      Get user email
+    */
     const token = req.headers.authentication
     const email = jwt.verify(token, secret).email
 
+    /*
+      Try to find and update user in database
+    */
     try {
+
+        /*
+          Member variable to create token and user object
+        */
         const member = await User.findOneAndUpdate({ email }, { $push: { addresses: wdAddress } }).catch(
             (err) => {
                 console.error(err)
@@ -154,6 +202,7 @@ async function addAddress(req, res) {
             }
         )
 
+        console.log(member)
         const jwtToken = jwt.sign(
             {
                 userId: member._id,
@@ -166,6 +215,7 @@ async function addAddress(req, res) {
 
         const user = createUserObject(member)
 
+        console.log(user)
         return res
             .status(201)
             .json({ message: 'Address Saved', token: jwtToken, user: user })

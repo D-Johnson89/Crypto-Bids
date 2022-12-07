@@ -6,31 +6,62 @@ import Form from 'react-bootstrap/Form'
 import { loginUser} from '../util/userFuncs'
 
 
-// Main Login function
+/*
+  Main Login function
+*/
 function Login() {
-	// Set email and password states
+
+	/*
+      Set email and password states
+    */
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
+
+    /*
+      Set hook functions
+    */
 	const signIn = useSignIn()
 	const navigate = useNavigate()
 
-	// Function to log user in
+	/*
+      Function to log user in
+    */
 	function submitForm(e) {
-        // Prevent default page refresh
+
+        /*
+          Prevent default page refresh
+        */
         e.preventDefault()
 
+        /*
+          Call loginUser as a promise to manipulate the return data
+        */
         const promise = loginUser(email, password)
         promise.then((data) => {
+
+            /*
+              If reponse includes token, sign-in user and navigate home
+            */
             if (data.token) {
                 
+                /*
+                  Sign-in user
+                */
                 signIn({
                     token: data.token,
                     expiresIn: 120,
                     tokenType: 'Bearer',
                     authState: { user: data.user },
                 })
-                // Navigate to home with user data
+
+                /*
+                  Navigate home
+                */
                 navigate('/')
+            
+            /*
+              Else alert user email or password is incorrect
+            */
             } else {
                 alert('Email or password incorrect!')
             }

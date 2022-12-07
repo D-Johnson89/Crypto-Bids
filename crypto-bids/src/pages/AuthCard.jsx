@@ -5,10 +5,24 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import { useAuthUser } from 'react-auth-kit'
 
-// Main AuthCard Component
+/*
+  Main AuthCard Component
+*/
 function AuthCard() {
+
+    /*
+      Set hook function
+    */
     const auth = useAuthUser()
+
+    /*
+      Set user with auth state
+    */
     const user = auth().user
+
+    /*
+      Function to check for user env == practice to return test balance
+    */
     const isUserEnvPractice = () => user.environment == 'practice' ? user.balances.test : user.balances.tether
 
     return (
@@ -28,6 +42,7 @@ function AuthCard() {
                     </Row>
                 </div>
             </Stack>
+            <p className="mt-5">Verification coming soon!</p>
         </Container>
     )
 }
