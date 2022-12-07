@@ -1,31 +1,36 @@
-const bcrypt = require('bcryptjs')
-const User = require('../models/user.model')
-const jwt = require('jsonwebtoken')
-const secret = process.env.SECRET || 'MY_S3CR3T_K3Y'
+const bcrypt = require("bcryptjs");
+const User = require("../models/user.model");
+const jwt = require("jsonwebtoken");
+const secret = process.env.SECRET || "MY_S3CR3T_K3Y";
 
 /*
   Set user object
 */
-function createUserObject (member) {
-    const isAddresses = () => member.addresses ? member.addresses : []
+function createUserObject(member) {
+  const isAddresses = () => (member.addresses ? member.addresses : []);
 
-    const isBids = () => member.bids ? member.bids : []
+  const isBids = () => (member.bids ? member.bids : []);
 
-    const isTransactions = () => member.transactions ? member.transactions : []
-    
-    const user = {
-        environment: member.environment,
-        username: member.username,
-        email: member.email,
-        balances: {fiat: member.fiatBal, tether: member.tetherBal, test: member.testBal},
-        invites: member.invites,
-        addresses: isAddresses(),
-        bids: isBids(),
-        transactions: isTransactions(),
-    }
+  const isTransactions = () => (member.transactions ? member.transactions : []);
 
-    return user
+  const user = {
+    environment: member.environment,
+    username: member.username,
+    email: member.email,
+    balances: {
+      fiat: member.fiatBal,
+      tether: member.tetherBal,
+      test: member.testBal,
+    },
+    invites: member.invites,
+    addresses: isAddresses(),
+    bids: isBids(),
+    transactions: isTransactions(),
+  };
+
+  return user;
 }
+
 /*
   @ desc Creates User
   @ route POST api/register
@@ -79,7 +84,6 @@ async function setUser (req, res) {
             .json({ error: 'Duplicate key', message: "Email or username already exist" })
     }
 }
-
 
 /*
   @ desc Get User
@@ -159,7 +163,6 @@ async function getUser(req, res) {
     }
 }
 
-
 /*
   @ desc Add Withdrawal Address
   @ route POSR api/users/addAddress
@@ -213,7 +216,7 @@ async function addAddress(req, res) {
             { expiresIn: '24h' },
         )
 
-        const user = createUserObject(member)
+    const user = createUserObject(member);
 
         console.log(user)
         return res
@@ -226,8 +229,6 @@ async function addAddress(req, res) {
     }
 }
 
-
-
 /*
   @ desc Delete Withdrawal Address
   @ route POST api/users/addressBook
@@ -235,113 +236,93 @@ async function addAddress(req, res) {
   @ returns {Promise<void>}
 */
 async function deleteAddress(req, res) {
-    // Create variables from req data
-    const token = req.headers.authentication
-    const address = req.headers.addressid
-    const email = jwt.verify(token, secret).email
+  // Create variables from req data
+  const token = req.headers.authentication;
+  const address = req.headers.addressid;
+  const email = jwt.verify(token, secret).email;
 
+  try {
+    const member = await User.updateOne(
+      { email: email },
+      { $pull: { addresses: { id: address } } }
+    ).catch((err) => {
+      console.error(err);
+      return res.status(400).json({ message: "Something went wrong" });
+    });
 
-    try {
-        const member = await User.updateOne(
-            { email: email }, { $pull: { addresses: { id: address }}}
-        ).catch(
-            (err) => {
-                console.error(err)
-                return res
-                    .status(400)
-                    .json({ message: 'Something went wrong' })
-            }
-        )
+    const jwtToken = jwt.sign(
+      {
+        userId: member._id,
+        username: member.username,
+        email: member.email,
+      },
+      secret,
+      { expiresIn: "24h" }
+    );
 
-        const jwtToken = jwt.sign(
-            {
-                userId: member._id,
-                username: member.username,
-                email: member.email,
-            },
-            secret,
-            { expiresIn: '24h' },
-        )
+    const user = createUserObject(member);
 
-        const user = createUserObject(member)
-
-        return res
-            .status(201)
-            .json({ message: 'Address deleted', token: jwtToken, user: user })
-    } catch (err) {
-        return res
-            .status(400)
-            .json({ message: 'Something went wrong!' })
-    }
+    return res
+      .status(201)
+      .json({ message: "Address deleted", token: jwtToken, user: user });
+  } catch (err) {
+    return res.status(400).json({ message: "Something went wrong!" });
+  }
 }
 
 // @desc Update User
 // @route PUT api/login/:id
 // @ access Private
 async function changePW(req, res) {
-    // Create variables from req data
-    const { oldPW, newPW } = req.body
+  // Create variables from req data
+  const { oldPW, newPW } = req.body;
 
-    const token = req.headers.authentication
-    const email = jwt.verify(token, secret).email
+  const token = req.headers.authentication;
+  const email = jwt.verify(token, secret).email;
 
-    try {
-        const member = await User.findOne({ email })
+  try {
+    const member = await User.findOne({ email });
 
-        if(!bcrypt.compareSync(oldPW, member.hash)) {
-            return res
-                .status(400)
-                .json({ message: 'Failed to change password!' })
-        } else {
+    if (!bcrypt.compareSync(oldPW, member.hash)) {
+      return res.status(400).json({ message: "Failed to change password!" });
+    } else {
+      member.hash = bcrypt.hashSync(newPW, 10);
 
-            member.hash = bcrypt.hashSync(newPW, 10)
+      await member.save();
 
-            await member.save()
-
-            return res
-                .status(201)
-                .json({ message: 'Password Changed' })
-        }
-        
-    } catch {
-        return res
-            .status(400)
-            .json({ message: 'Failed to change password!' })
+      return res.status(201).json({ message: "Password Changed" });
     }
+  } catch {
+    return res.status(400).json({ message: "Failed to change password!" });
+  }
 }
 
 // @desc Delete User
 // @route DeLETE api/login/:id
 // @ access Private
 async function deleteAcc(req, res) {
-    const token = req.headers.authentication
-    const {password} = req.body
-    const email = jwt.verify(token, secret).email
-    try {
-        const member = await User.findOne({ email })
+  const token = req.headers.authentication;
+  const { password } = req.body;
+  const email = jwt.verify(token, secret).email;
+  try {
+    const member = await User.findOne({ email });
 
-        if(!bcrypt.compareSync(password, member.hash)) {
-            return res
-                .status(400)
-                .json({ message: 'Incorrect Password'})
-        }
-        await member.deleteOne({ email: { email } })
-
-        return res
-            .status(201)
-            .json({ message: 'Account deleted' })
-    } catch {
-        return res
-            .status(400)
-            .json({ message: 'Failed to delete account' })
+    if (!bcrypt.compareSync(password, member.hash)) {
+      return res.status(400).json({ message: "Incorrect Password" });
     }
+    await member.deleteOne({ email: { email } });
+
+    return res.status(201).json({ message: "Account deleted" });
+  } catch {
+    return res.status(400).json({ message: "Failed to delete account" });
+  }
 }
 
 module.exports = {
-    getUser,
-    setUser,
-    addAddress,
-    deleteAddress,
-    changePW,
-    deleteAcc
-}
+  getUser,
+  setUser,
+  addAddress,
+  deleteAddress,
+  changePW,
+  deleteAcc,
+};
