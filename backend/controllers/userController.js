@@ -196,7 +196,9 @@ async function addAddress(req, res) {
         /*
           Member variable to create token and user object
         */
-        const member = await User.findOneAndUpdate({ email }, { $push: { addresses: wdAddress } }).catch(
+        const member = await User.findOneAndUpdate({ email }, { $push: { addresses: wdAddress } }, {
+            returnOriginal: false,
+        }).catch(
             (err) => {
                 console.error(err)
                 return res

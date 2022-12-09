@@ -17,30 +17,27 @@ function AddAddress() {
     const user = auth().user
     const addresses = user.addresses
 
+    console.log('User: ', user)
+    console.log('addresses: ', addresses)
+
     const navigate = useNavigate()
     const authHeader = useAuthHeader()
     const token = authHeader().split(' ')[1]
-    let id
+    let id = 0
 
     if (addresses.length) {
         for (let i = 0; i < addresses.length; i++) {
-            if (addresses === undefined) {
+            
+            if (user.addresses[i].id !== i) {
                 id = i
-                console.log('id: ', id, 'i: ', i)
-                break
-            } else if (addresses[i].id !== i) {
-                id = i
-                console.log('id: ', id, 'i: ', i)
-                break
             } else {
-                console.log('id: ', id, 'i: ', i)
-                continue
+                id++
             }
         }
     } else {
         id = 0
     }
-
+    console.log(id)
     // onSubmit function for saving adresses
     function submitForm(e) {
         // Prevent Default page refresh
