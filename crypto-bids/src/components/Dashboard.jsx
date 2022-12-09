@@ -54,6 +54,7 @@ function Dashboard() {
       Component variable to display user card that acts as button
     */
     const Card = () => {
+
         return (
             <Container>
                 <Stack gap={1}>
@@ -73,6 +74,7 @@ function Dashboard() {
             </Container>
         )
     }
+    
     
     return (
         <Navbar className="mb-5 border border-success rounded-pill" variant="secondary" bg="primary" expand="lg">

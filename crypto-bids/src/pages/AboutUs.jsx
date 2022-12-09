@@ -4,6 +4,8 @@ import Container from 'react-bootstrap/Container'
 import NavOptions from '../components/NavOptions'
 
 function AboutUs() {
+
+    
     return (
         <Container fluid>
             <h1>About Us</h1>

@@ -25,6 +25,7 @@ function AuthCard() {
     */
     const isUserEnvPractice = () => user.environment == 'practice' ? user.balances.test : user.balances.tether
 
+    
     return (
         <Container fluid>
             <h1>Personal Information</h1>

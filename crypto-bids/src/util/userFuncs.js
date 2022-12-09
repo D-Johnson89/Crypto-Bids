@@ -116,7 +116,7 @@ export function saveAddress(token, id, institute, address) {
 /*
   Function to delete addresses
 */
-export function deleteAddress(user, token, item) {
+export function deleteAddress(token, item) {
 
     /*
       Check if user wants to delete address
@@ -145,10 +145,6 @@ export function deleteAddress(user, token, item) {
                     AddressId: `${item}`,
                 }
             })
-
-            /*
-              Return to page for use
-            */
             .then((response) => {
                 return response.json()
             })
@@ -162,7 +158,7 @@ export function deleteAddress(user, token, item) {
     }
 
     /*
-      If user confims delete, follow through
+      If user confirms delete, follow through
     */
     if (confirmBox) {
         doDelete()

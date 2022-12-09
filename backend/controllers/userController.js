@@ -246,12 +246,15 @@ async function deleteAddress(req, res) {
   try {
     const member = await User.updateOne(
       { email: email },
-      { $pull: { addresses: { id: address } } }
+      { $pull: { addresses: { id: address } } }, {
+        returnOriginal: false,
+      }
     ).catch((err) => {
       console.error(err);
       return res.status(400).json({ message: "Something went wrong" });
     });
 
+    console.log(member)
     const jwtToken = jwt.sign(
       {
         userId: member._id,

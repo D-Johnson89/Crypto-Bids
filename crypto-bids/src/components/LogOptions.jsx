@@ -6,8 +6,17 @@ import Nav from 'react-bootstrap/Nav'
 import Navbar from 'react-bootstrap/Navbar'
 import NavDropdown from 'react-bootstrap/NavDropdown'
 
+/*
+  Main Login nav options
+*/
 function LogOptions() {
+
+    /*
+      Set hook function
+    */
     const navigate = useNavigate()
+
+
 	return (
 		<Navbar className="mb-5 border border-success rounded-pill" variant="secondary" bg="primary" expand="lg">
 			<Container fluid>

@@ -5,8 +5,14 @@ import { Outlet } from 'react-router-dom'
 import { useIsAuthenticated} from 'react-auth-kit'
 
 
-// Function to check if Logged In, Determines Nav Option to use
+/*
+  Conditional nav option, renders logoptions or user dashboard, set as index and renders children in <Outlet />
+*/
 function NavOptions() {
+
+    /*
+      Set hook function
+    */
     const isAuthenticated = useIsAuthenticated()
 	
     

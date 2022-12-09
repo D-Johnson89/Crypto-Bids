@@ -4,8 +4,14 @@ import Container from 'react-bootstrap/Container'
 import Button from 'react-bootstrap/Button'
 
 
-// Function to create app's basic ui nap buttons
+/*
+  Function to create app's basic ui nav buttons
+*/
 function Buttons({ buttons }) {
+
+    /*
+      Set hook functions
+    */
     const navigate = useNavigate()
     
 

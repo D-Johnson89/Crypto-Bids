@@ -85,6 +85,7 @@ function Register() {
         }
         
     }
+    
 
 	return (
 		<div className="mx-auto">

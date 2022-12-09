@@ -8,21 +8,41 @@ import { FaPlus } from 'react-icons/fa'
 import { deleteAddress } from '../util/userFuncs'
 import { useAuthHeader, useAuthUser, useSignIn } from 'react-auth-kit'
 
-// Main AddressBook Component
+/*
+  Main AddressBook Component
+*/
 function AddressBook() {
+
+    /*
+      Set hook functions
+    */
     const navigate = useNavigate()
     const signIn = useSignIn()
     const authHeader = useAuthHeader()
-    const token = authHeader().split(' ')[1]
     const auth = useAuthUser()
+
+    /*
+      Set variables
+    */
+    const token = authHeader().split(' ')[1]
     const user = auth().user
     let wdAddresses = user.addresses
+
+    /*
+      Set addresses state
+    */
     const [addresses, setAddresses] = useState(wdAddresses)
     
-    function handleClick(user, token, address) {
+    /*
+      onClick function handler
+    */
+    function handleClick(token, address) {
 
-        const promise = deleteAddress(user, token, address)
-        console.log(promise)
+        /*
+          Call deleteAddress as promise to manipluate data
+        */
+        const promise = deleteAddress(token, address)
+        //console.log(promise)
         promise.then((data) => {
             if(data.message == 'Address deleted') {
                 //May have to look at deleting addresses another way
