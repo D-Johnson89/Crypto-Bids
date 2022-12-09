@@ -28,6 +28,7 @@ function AddressBook() {
     const user = auth().user
     let wdAddresses = user.addresses
 
+    console.log(token)
     /*
       Set addresses state
     */
@@ -42,12 +43,13 @@ function AddressBook() {
           Call deleteAddress as promise to manipluate data
         */
         const promise = deleteAddress(token, address)
-        //console.log(promise)
+        console.log(promise)
         promise.then((data) => {
             if(data.message == 'Address deleted') {
                 //May have to look at deleting addresses another way
                 alert(data.message)
 
+                setAddresses(data.user.addresses)
                 signIn({
                     token: data.token,
                     expiresIn: 120,
@@ -85,7 +87,7 @@ function AddressBook() {
                                 <Button
                                     variant='primary'
                                     onClick={() => {
-                                        handleClick(user, token, address.id)
+                                        handleClick(token, address.id)
                                     }}
                                 >
                                     Delete

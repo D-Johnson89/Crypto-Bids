@@ -1,41 +1,52 @@
-const bcrypt = require("bcryptjs");
-const User = require("../models/user.model");
-const jwt = require("jsonwebtoken");
-const secret = process.env.SECRET || "MY_S3CR3T_K3Y";
+const bcrypt = require("bcryptjs")
+const User = require("../models/user.model")
+const jwt = require("jsonwebtoken")
+const secret = process.env.SECRET || "MY_S3CR3T_K3Y"
 
 /*
   Set user object
 */
 function createUserObject(member) {
-  const isAddresses = () => (member.addresses ? member.addresses : []);
 
-  const isBids = () => (member.bids ? member.bids : []);
+    /*
+      Set variable functions for checking existing records
+    */
+    const isAddresses = () => (member.addresses ? member.addresses : [])
 
-  const isTransactions = () => (member.transactions ? member.transactions : []);
+    const isBids = () => (member.bids ? member.bids : [])
 
-  const user = {
-    environment: member.environment,
-    username: member.username,
-    email: member.email,
-    balances: {
-      fiat: member.fiatBal,
-      tether: member.tetherBal,
-      test: member.testBal,
-    },
-    invites: member.invites,
-    addresses: isAddresses(),
-    bids: isBids(),
-    transactions: isTransactions(),
-  };
+    const isTransactions = () => (member.transactions ? member.transactions : [])
 
-  return user;
+    /*
+      Create user object to return
+    */
+    const user = {
+        environment: member.environment,
+        username: member.username,
+        email: member.email,
+        balances: {
+        fiat: member.fiatBal,
+        tether: member.tetherBal,
+        test: member.testBal,
+        },
+        invites: member.invites,
+        addresses: isAddresses(),
+        bids: isBids(),
+        transactions: isTransactions(),
+    }
+
+    /*
+      Return user
+    */
+    return user
 }
+
 
 /*
   @ desc Creates User
   @ route POST api/register
   @ params (req, res)
-  @ returns {Promise<void>}
+  @ returns {Promise<tokenObj, userObj>}
 */
 async function setUser (req, res) {
 
@@ -85,11 +96,12 @@ async function setUser (req, res) {
     }
 }
 
+
 /*
   @ desc Get User
   @ route POST api/login
   @ params (req, res)
-  @ returns {Promis<any>}
+  @ returns {Promise<tokenObj, userObj>}
 */
 async function getUser(req, res) {
 
@@ -139,7 +151,7 @@ async function getUser(req, res) {
             secret,
             { expiresIn: '24h' },
         )
-
+        
         /*
           Create user variable to pass back to front end
         */
@@ -163,11 +175,12 @@ async function getUser(req, res) {
     }
 }
 
+
 /*
   @ desc Add Withdrawal Address
-  @ route POSR api/users/addAddress
+  @ route POST api/users/addAddress
   @ params (req, res)
-  @ returns {Promise<void>}
+  @ returns {Promise<tokenObj, userObj>}
 */
 async function addAddress(req, res) {
 
@@ -194,12 +207,16 @@ async function addAddress(req, res) {
     try {
 
         /*
-          Member variable to create token and user object
+          Member variable to create token and user object for
         */
         const member = await User.findOneAndUpdate({ email }, { $push: { addresses: wdAddress } }, {
             returnOriginal: false,
         }).catch(
             (err) => {
+
+                /*
+                  Catch error and inform user something went wrong while searchin db
+                */
                 console.error(err)
                 return res
                     .status(400)
@@ -207,7 +224,9 @@ async function addAddress(req, res) {
             }
         )
 
-        console.log(member)
+        /*
+          Create jwt token
+        */
         const jwtToken = jwt.sign(
             {
                 userId: member._id,
@@ -218,12 +237,21 @@ async function addAddress(req, res) {
             { expiresIn: '24h' },
         )
 
-    const user = createUserObject(member);
+        /*
+          Create user object
+        */
+        const user = createUserObject(member)
 
-        console.log(user)
+        /*
+          Return token and user object
+        */
         return res
             .status(201)
             .json({ message: 'Address Saved', token: jwtToken, user: user })
+
+    /*
+      Catch erros and return address not saved
+    */
     } catch (err) {
         return res
             .status(400)
@@ -231,96 +259,189 @@ async function addAddress(req, res) {
     }
 }
 
+
 /*
   @ desc Delete Withdrawal Address
   @ route POST api/users/addressBook
   @ params (req, res)
-  @ returns {Promise<void>}
+  @ returns {Promise<tokenObj, userObj>}
 */
 async function deleteAddress(req, res) {
-  // Create variables from req data
-  const token = req.headers.authentication;
-  const address = req.headers.addressid;
-  const email = jwt.verify(token, secret).email;
 
-  try {
-    const member = await User.updateOne(
-      { email: email },
-      { $pull: { addresses: { id: address } } }, {
-        returnOriginal: false,
-      }
-    ).catch((err) => {
-      console.error(err);
-      return res.status(400).json({ message: "Something went wrong" });
-    });
+    /*
+      Create variables from req data
+    */
+    const token = req.headers.authentication
+    const address = req.headers.addressid
+    const email = jwt.verify(token, secret).email
 
-    console.log(member)
-    const jwtToken = jwt.sign(
-      {
-        userId: member._id,
-        username: member.username,
-        email: member.email,
-      },
-      secret,
-      { expiresIn: "24h" }
-    );
+    /*
+      Try to find and update user in database
+    */
+    try {
 
-    const user = createUserObject(member);
+        /*
+          Member variable to create token and user object for
+        */
+        const member = await User.findOneAndUpdate({ email }, { $pull: { addresses: { id: address } } }, {
+            returnOriginal: false,
+        }).catch(
+            (err) => {
 
-    return res
-      .status(201)
-      .json({ message: "Address deleted", token: jwtToken, user: user });
-  } catch (err) {
-    return res.status(400).json({ message: "Something went wrong!" });
-  }
+                /*
+                  Catch error and inform user something went wrong while searchin db
+                */
+                console.error(err);
+                return res.status(400).json({ message: "Something went wrong" })
+            }
+        )
+
+        //console.log('member: ', member)
+        /*
+          Create jwt token
+        */
+        const jwtToken = jwt.sign(
+        {
+            userId: member._id,
+            username: member.username,
+            email: member.email,
+        },
+        secret,
+        { expiresIn: "24h" }
+        )
+
+        /*
+          Create user object
+        */
+        const user = createUserObject(member)
+
+        //console.log(user)
+        /*
+          Return token and user object
+        */
+        return res
+        .status(201)
+        .json({ message: "Address deleted", token: jwtToken, user: user })
+
+    /*
+      Catch errors and return something went wrong
+    */
+    } catch (err) {
+        return res.status(400).json({ message: "Something went wrong!" })
+    }
 }
 
-// @desc Update User
-// @route PUT api/login/:id
-// @ access Private
+
+/*
+  @ desc Update User password
+  @ route POST api/users/changePW
+  @ params (req, res)
+  @ returns {Promise<void>}
+*/
 async function changePW(req, res) {
-  // Create variables from req data
-  const { oldPW, newPW } = req.body;
 
-  const token = req.headers.authentication;
-  const email = jwt.verify(token, secret).email;
+    /*
+        Create variables from req data
+    */
+    const { oldPW, newPW } = req.body
 
-  try {
-    const member = await User.findOne({ email });
+    const token = req.headers.authentication
+    const email = jwt.verify(token, secret).email
 
-    if (!bcrypt.compareSync(oldPW, member.hash)) {
-      return res.status(400).json({ message: "Failed to change password!" });
-    } else {
-      member.hash = bcrypt.hashSync(newPW, 10);
+    /*
+      Try to get user data
+    */
+    try {
 
-      await member.save();
+        /*
+          Create user variable for user found
+        */
+        const member = await User.findOne({ email })
 
-      return res.status(201).json({ message: "Password Changed" });
+        /*
+          If input old password doesnt match saved hash comparrison, return failed to change password
+        */
+        if (!bcrypt.compareSync(oldPW, member.hash)) {
+        return res.status(400).json({ message: "Failed to change password!" })
+
+        /*
+          Else update hash for current user
+        */
+        } else {
+            member.hash = bcrypt.hashSync(newPW, 10)
+
+            /*
+              Save change in db
+            */
+            await member.save()
+
+            /*
+              Return password changed
+            */
+            return res.status(201).json({ message: "Password Changed" })
+        }
+
+    /*
+      Catch errors and return failed to change password
+    */
+    } catch {
+        return res.status(400).json({ message: "Failed to change password!" })
     }
-  } catch {
-    return res.status(400).json({ message: "Failed to change password!" });
-  }
 }
 
-// @desc Delete User
-// @route DeLETE api/login/:id
-// @ access Private
+
+/*
+  @ desc Delete User
+  @ route DELETE api/user/deleteAcc
+  @ params (req, res)
+  @ returns {Promise<null>}
+*/
 async function deleteAcc(req, res) {
-  const token = req.headers.authentication;
-  const { password } = req.body;
-  const email = jwt.verify(token, secret).email;
-  try {
-    const member = await User.findOne({ email });
 
-    if (!bcrypt.compareSync(password, member.hash)) {
-      return res.status(400).json({ message: "Incorrect Password" });
+    /*
+      Create variables from req data
+    */
+    const token = req.headers.authentication
+    const email = jwt.verify(token, secret).email
+
+    /*
+      Set variable from form data
+    */
+    const { password } = req.body;
+    
+    /*
+      Try to get user data
+    */
+    try {
+
+        /*
+          Variable for user found
+        */
+        const member = await User.findOne({ email })
+
+        /*
+          If password entered is incorrect, return as such
+        */
+        if (!bcrypt.compareSync(password, member.hash)) {
+            return res.status(400).json({ message: "Incorrect Password" })
+        }
+
+        /*
+          Delete user data
+        */
+        await member.deleteOne({ email: { email } })
+
+        /*
+          Return account deleted
+        */
+        return res.status(201).json({ message: "Account deleted" })
+
+    /*
+      Catch errors and return failed to delete account
+    */
+    } catch {
+        return res.status(400).json({ message: "Failed to delete account" })
     }
-    await member.deleteOne({ email: { email } });
-
-    return res.status(201).json({ message: "Account deleted" });
-  } catch {
-    return res.status(400).json({ message: "Failed to delete account" });
-  }
 }
 
 module.exports = {
@@ -330,4 +451,4 @@ module.exports = {
   deleteAddress,
   changePW,
   deleteAcc,
-};
+}
