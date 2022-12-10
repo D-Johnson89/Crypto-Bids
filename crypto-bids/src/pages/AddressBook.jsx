@@ -43,7 +43,6 @@ function AddressBook() {
           Call deleteAddress as promise to manipluate data
         */
         const promise = deleteAddress(token, address)
-        console.log(promise)
         promise.then((data) => {
             if(data.message == 'Address deleted') {
                 //May have to look at deleting addresses another way

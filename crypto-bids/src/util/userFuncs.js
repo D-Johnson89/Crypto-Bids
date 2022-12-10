@@ -143,6 +143,7 @@ export function deleteAddress(token, item) {
                 headers: {
                     Authentication: `${token}`,
                     AddressId: `${item}`,
+                    "Content-Type" : "application/json",
                 }
             })
             

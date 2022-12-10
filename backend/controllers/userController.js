@@ -334,7 +334,7 @@ async function deleteAddress(req, res) {
 
 /*
   @ desc Update User password
-  @ route POST api/users/changePW
+  @ route PUT api/users/changePW
   @ params (req, res)
   @ returns {Promise<void>}
 */
