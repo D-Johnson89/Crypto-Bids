@@ -17,8 +17,6 @@ function AddAddress() {
     const user = auth().user
     const addresses = user.addresses
 
-    console.log('User: ', user)
-    console.log('addresses: ', addresses)
 
     const navigate = useNavigate()
     const authHeader = useAuthHeader()
@@ -37,7 +35,7 @@ function AddAddress() {
     } else {
         id = 0
     }
-    console.log(id)
+    
     // onSubmit function for saving adresses
     function submitForm(e) {
         // Prevent Default page refresh

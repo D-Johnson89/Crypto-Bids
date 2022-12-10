@@ -285,18 +285,20 @@ async function deleteAddress(req, res) {
         */
         const member = await User.findOneAndUpdate({ email }, { $pull: { addresses: { id: address } } }, {
             returnOriginal: false,
-        }).catch(
+        })
+        .catch(
             (err) => {
 
                 /*
                   Catch error and inform user something went wrong while searchin db
                 */
                 console.error(err);
-                return res.status(400).json({ message: "Something went wrong" })
+                return res
+                    .status(400)
+                    .json({ message: "Something went wrong" })
             }
         )
 
-        //console.log('member: ', member)
         /*
           Create jwt token
         */
@@ -315,7 +317,6 @@ async function deleteAddress(req, res) {
         */
         const user = createUserObject(member)
 
-        //console.log(user)
         /*
           Return token and user object
         */

@@ -148,7 +148,7 @@ export function deleteAddress(token, item) {
             })
             
             .then((response) => {
-                console.log(response)
+                //console.log('Response: ', response)
                 return response.json()
             })
 
