@@ -295,7 +295,7 @@ async function deleteAddress(req, res) {
                 console.error(err);
                 return res
                     .status(400)
-                    .json({ message: "Something went wrong" })
+                    .json({ message: 'Something went wrong' })
             }
         )
 
@@ -303,13 +303,13 @@ async function deleteAddress(req, res) {
           Create jwt token
         */
         const jwtToken = jwt.sign(
-        {
-            userId: member._id,
-            username: member.username,
-            email: member.email,
-        },
-        secret,
-        { expiresIn: "24h" }
+            {
+                userId: member._id,
+                username: member.username,
+                email: member.email,
+            },
+            secret,
+            { expiresIn: '24h' }
         )
 
         /*
@@ -321,14 +321,16 @@ async function deleteAddress(req, res) {
           Return token and user object
         */
         return res
-        .status(201)
-        .json({ message: "Address deleted", token: jwtToken, user: user })
+            .status(201)
+            .json({ message: 'Address deleted', token: jwtToken, user: user })
 
     /*
       Catch errors and return something went wrong
     */
     } catch (err) {
-        return res.status(400).json({ message: "Something went wrong!" })
+        return res
+            .status(400)
+            .json({ message: 'Something went wrong!' })
     }
 }
 
@@ -363,7 +365,9 @@ async function changePW(req, res) {
           If input old password doesnt match saved hash comparrison, return failed to change password
         */
         if (!bcrypt.compareSync(oldPW, member.hash)) {
-        return res.status(400).json({ message: "Failed to change password!" })
+            return res
+                .status(400)
+                .json({ message: 'Failed to change password!' })
 
         /*
           Else update hash for current user
@@ -379,14 +383,14 @@ async function changePW(req, res) {
             /*
               Return password changed
             */
-            return res.status(201).json({ message: "Password Changed" })
+            return res.status(201).json({ message: 'Password Changed' })
         }
 
     /*
       Catch errors and return failed to change password
     */
     } catch {
-        return res.status(400).json({ message: "Failed to change password!" })
+        return res.status(400).json({ message: 'Failed to change password!' })
     }
 }
 
@@ -424,7 +428,7 @@ async function deleteAcc(req, res) {
           If password entered is incorrect, return as such
         */
         if (!bcrypt.compareSync(password, member.hash)) {
-            return res.status(400).json({ message: "Incorrect Password" })
+            return res.status(400).json({ message: 'Incorrect Password' })
         }
 
         /*
@@ -435,13 +439,13 @@ async function deleteAcc(req, res) {
         /*
           Return account deleted
         */
-        return res.status(201).json({ message: "Account deleted" })
+        return res.status(201).json({ message: 'Account deleted' })
 
     /*
       Catch errors and return failed to delete account
     */
     } catch {
-        return res.status(400).json({ message: "Failed to delete account" })
+        return res.status(400).json({ message: 'Failed to delete account' })
     }
 }
 
