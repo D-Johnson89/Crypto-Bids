@@ -36,30 +36,36 @@ function AddressBook() {
     /*
       onClick function handler
     */
-    function handleClick(token, address) {
+    async function handleClick(token, address) {
 
         /*
           Call deleteAddress as promise to manipluate data
         */
-        const promise = deleteAddress(token, address)
-        //console.log(promise)
-        promise.then((data) => {
-            if(data.message == 'Address deleted') {
-                //May have to look at deleting addresses another way
-                alert(data.message)
-
-                setAddresses(data.user.addresses)
-                signIn({
-                    token: data.token,
-                    expiresIn: 120,
-                    tokenType: 'Bearer',
-                    authState: { user: data.user },
-                })
+        try {
+            const promise = deleteAddress(token, address)
+            console.log(promise)
+            promise.then((data) => {
                 
-            } else {
-                alert(data.message)
-            }
-        })
+                if(data.message === 'Address deleted') {
+                    
+                    //May have to look at deleting addresses another way
+                    alert(data.message)
+
+                    setAddresses(data.user.addresses)
+                    signIn({
+                        token: data.token,
+                        expiresIn: 120,
+                        tokenType: 'Bearer',
+                        authState: { user: data.user },
+                    })
+                    
+                } else {
+                    alert(data.message)
+                }
+            })
+        } catch (err) {
+            console.log(err)
+        }
     }
 
     return (
@@ -68,11 +74,11 @@ function AddressBook() {
             <Container>
             <Stack gap={3}>
                 <div className="bg-secondary border">
-                    <Button type="primary" onClick={() => {addresses.length == 5 ? alert('no more than 5 addresses') : navigate('/addAddress')}}>
+                    <Button type="primary" onClick={() => {addresses.length >= 5 ? alert('no more than 5 addresses') : navigate('/addAddress')}}>
                         <FaPlus />Address
                     </Button>
                 </div>
-                {addresses.length == 0 ?
+                {addresses.length === 0 ?
                 <h3>No Saved Addresses</h3> :
                     addresses.map((address) => (
                     <div key={address.id}>

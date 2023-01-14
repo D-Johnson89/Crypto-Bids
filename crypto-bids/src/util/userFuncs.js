@@ -116,7 +116,7 @@ export function saveAddress(token, id, institute, address) {
 /*
   Function to delete addresses
 */
-export function deleteAddress(token, item) {
+export async function deleteAddress(token, item) {
 
     /*
       Check if user wants to delete address
@@ -128,7 +128,7 @@ export function deleteAddress(token, item) {
     /*
       Variable function to do if user confirms delete
     */
-    const doDelete = async () => {
+    const doDelete = () => {
 
         /*
           Send data to server to try to delete address
@@ -138,7 +138,7 @@ export function deleteAddress(token, item) {
             /*
               Variable promise to handle and return to page for use
             */
-            const response = await fetch(`http://localhost:5000/api/users/addressBook`, {
+            return fetch(`http://localhost:5000/api/users/addressBook`, {
                 method: "DELETE",
                 headers: {
                     Authentication: `${token}`,
@@ -148,8 +148,8 @@ export function deleteAddress(token, item) {
             })
             
             .then((response) => {
-                //console.log('Response: ', response)
-                return response.json()
+                
+                return response.json
             })
 
         /*
@@ -164,7 +164,7 @@ export function deleteAddress(token, item) {
       If user confirms delete, follow through
     */
     if (confirmBox) {
-        doDelete()
+        await doDelete()
     }
 }
 
