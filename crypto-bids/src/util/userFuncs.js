@@ -23,6 +23,7 @@ export function registerUser(username, email, password) {
     */
     .then((response) => {
         return response.json()
+
     })
 
     /*
@@ -31,6 +32,7 @@ export function registerUser(username, email, password) {
     .catch ((err) => {
     console.log('Error: ', err)
     return 'Email or username already exist'
+    
     }) 
 }
 
@@ -63,6 +65,7 @@ export function loginUser(email, password) {
             
         }
         return response.json()
+
     })
 
     /*
@@ -71,6 +74,7 @@ export function loginUser(email, password) {
     .catch((err) => {
         console.log("Error: ", err)
         return 'Email or password incorrect!'
+
     })
 }
 
@@ -101,6 +105,7 @@ export function saveAddress(token, id, institute, address) {
     */
     .then((response) => {
         return response.json()
+
     })
 
     /*
@@ -109,6 +114,7 @@ export function saveAddress(token, id, institute, address) {
     .catch((err) => {
         console.log('Error: ', err)
         return 'Address not saved!'
+
     }) 
 }
 
@@ -147,16 +153,21 @@ export function deleteAddress(token, item) {
                 }
             })
             
+            /*
+             If successful, send to page for use
+            */
             .then((response) => {
                 return response.json()
+
             })
 
         /*
-          Handle errors
+          Handle errors and return address not deleted
         */
         } catch (err) {
             console.log(err)
             return 'Address not deleted!'
+
         }
     }
 
@@ -165,8 +176,10 @@ export function deleteAddress(token, item) {
     */
     if (!confirmBox) {
         return 'Address not deleted!'
+
     } else {
         return doDelete()
+
     }
 }
 

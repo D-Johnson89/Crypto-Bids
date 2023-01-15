@@ -44,15 +44,19 @@ function AddressBook() {
         try {
             const promise = deleteAddress(token, address)
             promise.then((data) => {
-                console.log(data)
+                
+                /*
+                  Check data for address deleted, alert as such, update if needed
+                */
                 if(data === 'Address not deleted!') {
                     alert(data)
+
                 } else if(data.message === 'Address deleted') {
                     
-                    //May have to look at deleting addresses another way
                     alert(data.message)
 
                     setAddresses(data.user.addresses)
+
                     signIn({
                         token: data.token,
                         expiresIn: 120,
@@ -62,10 +66,17 @@ function AddressBook() {
                     
                 } else {
                     alert(data.message)
+
                 }
             })
+
+        /*
+          Handle errors
+        */
         } catch (err) {
             console.log(err)
+            alert('Address not deleted!')
+            
         }
     }
 
