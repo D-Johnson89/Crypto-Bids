@@ -116,7 +116,7 @@ export function saveAddress(token, id, institute, address) {
 /*
   Function to delete addresses
 */
-export async function deleteAddress(token, item) {
+export function deleteAddress(token, item) {
 
     /*
       Check if user wants to delete address
@@ -128,7 +128,7 @@ export async function deleteAddress(token, item) {
     /*
       Variable function to do if user confirms delete
     */
-    const doDelete = () => {
+    const doDelete = async () => {
 
         /*
           Send data to server to try to delete address
@@ -148,8 +148,7 @@ export async function deleteAddress(token, item) {
             })
             
             .then((response) => {
-                
-                return response.json
+                return response.json()
             })
 
         /*
@@ -157,14 +156,17 @@ export async function deleteAddress(token, item) {
         */
         } catch (err) {
             console.log(err)
+            return 'Address not deleted!'
         }
     }
 
     /*
       If user confirms delete, follow through
     */
-    if (confirmBox) {
-        await doDelete()
+    if (!confirmBox) {
+        return 'Address not deleted!'
+    } else {
+        return doDelete()
     }
 }
 

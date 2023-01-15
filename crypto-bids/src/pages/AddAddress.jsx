@@ -44,7 +44,7 @@ function AddAddress() {
         const promise = saveAddress(token, id, institute, address)
         
         promise.then((data) => {
-            if (data.message == 'Address Saved') {
+            if (data.message === 'Address Saved') {
                 
                 signIn({
                     token: data.token,
