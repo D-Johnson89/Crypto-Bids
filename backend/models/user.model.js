@@ -27,7 +27,7 @@ const Transactions = new mongoose.Schema(
 
 const User = new mongoose.Schema(
 	{
-        environment: {type: String, default: 'practice'},
+        environment: { type: String, default: 'practice' },
 		username: { type: String, required: true, unique: true },
 		email: { type: String, required: true, unique: true },
 		hash: { type: String, required: true },
