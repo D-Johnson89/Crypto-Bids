@@ -1,11 +1,12 @@
 import React from 'react'
+import { useEffect, useState } from 'react'
 import Container from 'react-bootstrap/Container'
 import Image from 'react-bootstrap/Image'
 import Dropdown from 'react-bootstrap/Dropdown'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import { FaBars } from 'react-icons/fa'
-import { getCandles } from '../util/basicFuncs'
+import { createCandles } from '../util/basicFuncs'
 import DropdownMenu from 'react-bootstrap/esm/DropdownMenu'
 
 
@@ -14,6 +15,18 @@ import DropdownMenu from 'react-bootstrap/esm/DropdownMenu'
 */
 function Trade() {
     console.log('trade page')
+    /*
+      Set state variables
+    */
+    const [bidPair, setBidPair] = useState('BTC/USDT')
+
+    /*
+      Set up useEffect for candle stick images
+    */
+   useEffect(() => {
+      const candles = createCandles()
+
+   }, /*[bidPair, cycle]*/)
     
   return (
     <Container fluid>

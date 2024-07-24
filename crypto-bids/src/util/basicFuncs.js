@@ -1,7 +1,7 @@
 /*
   Function to get candle-sticks
 */
-export function getCandles(symbol, interval, limit) {
+export function createCandles(symbol, interval, limit) {
 
     /*
       Send data to server and try to create candles
