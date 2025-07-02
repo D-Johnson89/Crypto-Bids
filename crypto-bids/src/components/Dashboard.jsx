@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { FaUserCircle, FaPiggyBank, FaUserLock, FaInfo, FaSignOutAlt, FaTrashAlt, FaHome } from 'react-icons/fa'
+import { FaUserCircle, FaPiggyBank, FaUserLock, FaSignOutAlt, FaTrashAlt, FaHome } from 'react-icons/fa'
 import Nav from 'react-bootstrap/Nav'
 import Navbar from 'react-bootstrap/Navbar'
 import NavDropdown from 'react-bootstrap/NavDropdown'
@@ -9,15 +9,15 @@ import Stack from 'react-bootstrap/Stack'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import Button from 'react-bootstrap/Button'
-import { useSignOut } from 'react-auth-kit'
-import { useAuthUser } from 'react-auth-kit'
+import { useSignOut, useAuthUser } from 'react-auth-kit'
+import { UserContext } from '../util/UserContext'
 
 // Main User Nav Options
 function Dashboard() {
     const signOut = useSignOut()
     const navigate = useNavigate()
     const auth = useAuthUser()
-    const user = auth().user
+    const user = useContext(UserContext)
     console.log(user)
 
 
@@ -26,27 +26,31 @@ function Dashboard() {
         navigate('/')
     }
 
+    const isUserEnvPractice = () => user.environment == 'practice' ? user.balances.test : user.balances.tether
+
     const Card = () => {
         return (
-            <Stack gap={3}>
-                <div>
-                    <Row>
-                        <Col>Username</Col>
-                        <Col>{user.username}</Col>
-                    </Row>
-                </div>
-                <div>
-                    <Row>
-                        <Col>Balance</Col>
-                        <Col>{user.balances.tether}</Col>
-                    </Row>
-                </div>
-            </Stack>
+            <Container>
+                <Stack gap={1}>
+                    <div>
+                        <Row>
+                            <Col xs={6}>Username</Col>
+                            <Col xs={6}>{user.username}</Col>
+                        </Row>
+                    </div>
+                    <div>
+                        <Row>
+                            <Col xs={6}>Balance</Col>
+                            <Col xs={6}>{isUserEnvPractice()}</Col>
+                        </Row>
+                    </div>
+                </Stack>
+            </Container>
         )
     }
     
     return (
-        <Navbar variant="secondary" bg="primary" expand="lg">
+        <Navbar className="mb-5 border border-success rounded-pill" variant="secondary" bg="primary" expand="lg">
             <Container fluid>
                 <Navbar.Brand onClick={() => {navigate('/')}}><FaHome /></Navbar.Brand>
                 <Navbar.Toggle aria-controls="dashboard" />
@@ -65,9 +69,6 @@ function Dashboard() {
                             </NavDropdown.Item>
                             <NavDropdown.Item onClick={() => { navigate('/changePW')}} >
                                 <FaUserLock />Change Password
-                            </NavDropdown.Item>
-                            <NavDropdown.Item onClick={() => { navigate('/aboutUs')}} >
-                                <FaInfo />About Us
                             </NavDropdown.Item>
                             <NavDropdown.Item onClick={() => { navigate('/deleteAcc')}} >
                                 <FaTrashAlt />Delete Account

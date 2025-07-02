@@ -3,6 +3,30 @@ const User = require('../models/user.model')
 const jwt = require('jsonwebtoken')
 const secret = process.env.SECRET || 'MY_S3CR3T_K3Y'
 
+/*
+Set user object
+*/
+function createUserObject (member) {
+    const isAddresses = () => member.addresses ? member.addresses : []
+
+    const isBids = () => member.bids ? member.bids : []
+
+    const isTransactions = () => member.transactions ? member.transactions : []
+    
+    const user = {
+        environment: member.environment,
+        username: member.username,
+        email: member.email,
+        balances: {fiat: member.fiatBal, tether: member.tetherBal, test: member.testBal},
+        invites: member.invites,
+        addresses: isAddresses(),
+        bids: isBids(),
+        transactions: isTransactions(),
+    }
+
+    return user
+}
+
 
 /*
   @ desc Creates User
@@ -30,15 +54,7 @@ async function setUser (req, res) {
             { expiresIn: '24h' },
         )
         
-        const user = {
-            username: newUser.username,
-            email: newUser.email,
-            balances: {fiat: newUser.fiatBal, tether: newUser.tetherBal},
-            invites: newUser.invites,
-            addresses: [],
-            bids: [],
-            transactions: [],
-        }
+        const user = createUserObject(newUser)
 
         return res
             .status(201)
@@ -94,15 +110,7 @@ async function getUser(req, res) {
             { expiresIn: '24h' },
         )
         
-        const user = {
-            username: member.username,
-            email: member.email,
-            balances: {fiat: newUser.fiatBal, tether: newUser.tetherBal},
-            invites: member.invites,
-            addresses: member.addresses,
-            bids: member.bids ? member.bids : [],
-            transactions: member.transactions ? member.transactions : [],
-        }
+        const user = createUserObject(member)
 
         return res
             .status(200)
@@ -219,8 +227,28 @@ async function changePW(req, res) {
 // @desc Delete User
 // @route DeLETE api/login/:id
 // @ access Private
-const deleteUser = (req, res) => {
-    res.status(200).json({ message: `Delete User ${req.params.id}` })
+async function deleteAcc(req, res) {
+    const token = req.headers.authentication
+    const {password} = req.body
+    const email = jwt.verify(token, secret).email
+    try {
+        const member = await User.findOne({ email })
+
+        if(!bcrypt.compareSync(password, member.hash)) {
+            return res
+                .status(400)
+                .json({ message: 'Incorrect Password'})
+        }
+        await member.deleteOne({ email: { email } })
+
+        return res
+            .status(201)
+            .json({ message: 'Account deleted' })
+    } catch {
+        return res
+            .status(400)
+            .json({ message: 'Failed to delete account' })
+    }
 }
 
 module.exports = {
@@ -229,5 +257,5 @@ module.exports = {
     addAddress,
     deleteAddress,
     changePW,
-    deleteUser
+    deleteAcc
 }

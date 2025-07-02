@@ -1,9 +1,3 @@
-import { createContext } from 'react'
-//import { resolvePath } from 'react-router-dom'
-
-export const UserContext = createContext(null)
-
-
 // Function to register user
 export function registerUser(username, email, password) {
 
@@ -138,5 +132,27 @@ export function changePW(token, oldPW, newPW) {
     .catch((err) => {
         console.log('Error: ', err)
         return 'Password change unsuccessful'
+    })
+}
+
+
+// Function to delete user
+export function deleteAcc(token, password) {
+    return fetch('http://localhost:5000/api/users/deleteAcc', {
+        method: "DELETE",
+        headers: {
+            Authentication: `${token}`,
+            "Content-Type" : "application/json",
+        },
+        body: JSON.stringify({
+            password,
+        }),
+    })
+    .then((response) => {
+        return response.json()
+    })
+    .catch((err) => {
+        console.log('Error: ', err)
+        return 'Failed to delete account'
     })
 }

@@ -4,19 +4,36 @@ import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import { useNavigate } from 'react-router-dom'
 import { useAuthHeader } from 'react-auth-kit'
-import { UserContext, saveAddress } from '../util/userFuncs'
+import { saveAddress } from '../util/userFuncs'
+import { UserContext } from '../util/UserContext'
 
 // Main AddAddress function
 function AddAddress() {
     // Set states
     const [institute, setInstitute] = useState('')
     const [address, setAddress] = useState('')
-    const user = useContext(UserContext)
+    const [user, setUser] = useState(useContext(UserContext))
+    const addresses = user.addresses
 
     const navigate = useNavigate()
     const authHeader = useAuthHeader()
     const token = authHeader().split(' ')[1]
-    const id = user.addresses.length ? user.addresses.length : 0
+    let id
+    if (addresses.length) {
+        id = addresses.length
+        for (let i = 0; i < addresses.length; i++) {
+            console.log(addresses[i])
+            if (addresses[i].id !== i) {
+                id = i
+                break
+            } else {
+                continue
+            }
+        }
+    } else {
+        id = 0
+    }
+    console.log(id)
 
     // onSubmit function for saving adresses
     function submitForm(e) {
@@ -28,7 +45,11 @@ function AddAddress() {
         promise.then((data) => {
             if (data.message == 'Address Saved') {
                 const wdAddress = data.wdAddress
-                user.addresses.push(wdAddress)
+                const member = JSON.parse(JSON.stringify(user))
+                member.addresses.push(wdAddress)
+                console.log('User: ', user)
+                console.log('Member: ', member)
+                setUser(member)
                 navigate('/addressBook')
             } else {
                 alert('Address not saved!')

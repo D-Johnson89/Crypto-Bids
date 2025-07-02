@@ -5,7 +5,8 @@ import Card from 'react-bootstrap/Card'
 import Stack from 'react-bootstrap/Stack'
 import Button from 'react-bootstrap/Button'
 import { FaPlus } from 'react-icons/fa'
-import { UserContext, deleteAddress } from '../util/userFuncs'
+import { deleteAddress } from '../util/userFuncs'
+import { UserContext } from '../util/UserContext'
 import { useAuthHeader } from 'react-auth-kit'
 
 // Main AddressBook Component
@@ -16,6 +17,7 @@ function AddressBook() {
     const user = useContext(UserContext)
     console.log(user)
     let wdAddresses = user.addresses
+    console.log(wdAddresses)
     const [addresses, setAddresses] = useState(wdAddresses)
     
 
@@ -46,13 +48,10 @@ function AddressBook() {
                             variant='primary'
                             onClick={() => {
                                 deleteAddress(user, token, address.id)
-                                setAddresses(
-                                    addresses.filter(
-                                        (a) => {
-                                            a.id !== addresses.id
-                                        }
-                                    )
+                                const tempAddresses = addresses.slice(
+                                    address.id, address.id + 1
                                 )
+                                setAddresses(tempAddresses)
                             }}
                         >
                             Delete

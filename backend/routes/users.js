@@ -33,6 +33,7 @@ router.post('/login', userCtrl.getUser)
 router.post('/addAddress', userCtrl.addAddress)
 router.delete('/addressBook', userCtrl.deleteAddress)
 router.put('/changePW', userCtrl.changePW)
+router.delete('/deleteAcc', userCtrl.deleteAcc)
 /*
     @AuthCard
     @ChangePW

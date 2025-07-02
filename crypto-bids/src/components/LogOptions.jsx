@@ -1,6 +1,6 @@
 import React from 'react'
 import { useNavigate, Link } from 'react-router-dom'
-import { FaHome, FaUserCircle, FaUserCheck, FaUserPlus, FaInfo } from 'react-icons/fa'
+import { FaHome, FaUserCircle, FaUserCheck, FaUserPlus } from 'react-icons/fa'
 import Container from 'react-bootstrap/Container'
 import Nav from 'react-bootstrap/Nav'
 import Navbar from 'react-bootstrap/Navbar'
@@ -9,7 +9,7 @@ import NavDropdown from 'react-bootstrap/NavDropdown'
 function LogOptions() {
     const navigate = useNavigate()
 	return (
-		<Navbar variant="secondary" bg="primary" expand="lg">
+		<Navbar className="mb-5 border border-success rounded-pill" variant="secondary" bg="primary" expand="lg">
 			<Container fluid>
 				<Navbar.Brand onClick={() =>{ navigate('/') }}><FaHome /></Navbar.Brand>
 				<Navbar.Toggle aria-controls="log-options" />
@@ -25,9 +25,6 @@ function LogOptions() {
 							</NavDropdown.Item>
 							<NavDropdown.Item onClick={() => { navigate('/users/register')}} >
 								<FaUserPlus />Register
-							</NavDropdown.Item>
-                            <NavDropdown.Item onClick={() => { navigate('/aboutus')}} >
-								<FaInfo />About Us
 							</NavDropdown.Item>
 						</NavDropdown>
 					</Nav>
